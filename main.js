@@ -372,61 +372,61 @@ class TetrisGame {
         storeModal.className = 'store-modal';
         storeModal.innerHTML = `
             <div class="store-content">
-                <h2>🎉 Επίπεδο ${this.currentStage} Ολοκληρώθηκε! 🎉</h2>
+                <h2>🎉 Level ${this.currentStage} Complete! 🎉</h2>
                 <div class="completion-stats">
-                    <p>💰 Κέρδισες: <span class="earned-money">+${earnedMoney}</span> χρήματα</p>
-                    <p>💳 Συνολικά χρήματα: <span class="total-money">${this.totalMoney}</span></p>
-                    <p>⏱️ Χρόνος: ${this.timeLimit - Math.floor((Date.now() - this.stageStartTime) / 1000)}s υπόλοιπος</p>
-                    <p>🧱 Blocks: ${this.maxBlocks - this.blocksUsed} εξοικονομημένα</p>
+                    <p>💰 Earned: <span class="earned-money">+${earnedMoney}</span> money</p>
+                    <p>💳 Total money: <span class="total-money">${this.totalMoney}</span></p>
+                    <p>⏱️ Time: ${this.timeLimit - Math.floor((Date.now() - this.stageStartTime) / 1000)}s remaining</p>
+                    <p>🧱 Blocks: ${this.maxBlocks - this.blocksUsed} saved</p>
                 </div>
                 
-                <h3>🛒 Αγόρασε Power-ups:</h3>
+                <h3>🛒 Buy Power-ups:</h3>
                 <div class="store-items">
                     <div class="store-item ${this.totalMoney >= 50 ? '' : 'disabled'}">
                         <div class="item-icon">💣</div>
                         <div class="item-info">
                             <span class="item-name">Dynamite</span>
-                            <span class="item-desc">Σκάει το τρέχον κομμάτι</span>
+                            <span class="item-desc">Explodes current piece</span>
                             <span class="item-price">50$</span>
-                            <span class="item-inventory">Έχεις: <span id="dynamite-count">${this.inventory.dynamite}</span></span>
+                            <span class="item-inventory">You have: <span id="dynamite-count">${this.inventory.dynamite}</span></span>
                         </div>
-                        <button onclick="tetrisGame.buyItem('dynamite', 50)" ${this.totalMoney >= 50 ? '' : 'disabled'}>Αγορά</button>
+                        <button onclick="tetrisGame.buyItem('dynamite', 50)" ${this.totalMoney >= 50 ? '' : 'disabled'}>Buy</button>
                     </div>
                     <div class="store-item ${this.totalMoney >= 75 ? '' : 'disabled'}">
                         <div class="item-icon">🔨</div>
                         <div class="item-info">
                             <span class="item-name">Shovel</span>
-                            <span class="item-desc">Καθαρίζει κάθετη γραμμή</span>
+                            <span class="item-desc">Clears vertical line</span>
                             <span class="item-price">75$</span>
-                            <span class="item-inventory">Έχεις: <span id="shovel-count">${this.inventory.shovel}</span></span>
+                            <span class="item-inventory">You have: <span id="shovel-count">${this.inventory.shovel}</span></span>
                         </div>
-                        <button onclick="tetrisGame.buyItem('shovel', 75)" ${this.totalMoney >= 75 ? '' : 'disabled'}>Αγορά</button>
+                        <button onclick="tetrisGame.buyItem('shovel', 75)" ${this.totalMoney >= 75 ? '' : 'disabled'}>Buy</button>
                     </div>
                     <div class="store-item ${this.totalMoney >= 40 ? '' : 'disabled'}">
                         <div class="item-icon">🔄</div>
                         <div class="item-info">
                             <span class="item-name">Trade</span>
-                            <span class="item-desc">Αλλάζει το τρέχον κομμάτι</span>
+                            <span class="item-desc">Changes current piece</span>
                             <span class="item-price">40$</span>
-                            <span class="item-inventory">Έχεις: <span id="trade-count">${this.inventory.trade}</span></span>
+                            <span class="item-inventory">You have: <span id="trade-count">${this.inventory.trade}</span></span>
                         </div>
-                        <button onclick="tetrisGame.buyItem('trade', 40)" ${this.totalMoney >= 40 ? '' : 'disabled'}>Αγορά</button>
+                        <button onclick="tetrisGame.buyItem('trade', 40)" ${this.totalMoney >= 40 ? '' : 'disabled'}>Buy</button>
                     </div>
                     <div class="store-item ${this.totalMoney >= 60 ? '' : 'disabled'}">
                         <div class="item-icon">⏰</div>
                         <div class="item-info">
                             <span class="item-name">Extra Time</span>
-                            <span class="item-desc">Προσθέτει +10 δευτερόλεπτα</span>
+                            <span class="item-desc">Adds +10 seconds</span>
                             <span class="item-price">60$</span>
-                            <span class="item-inventory">Έχεις: <span id="slow-count">${this.inventory.slow}</span></span>
+                            <span class="item-inventory">You have: <span id="slow-count">${this.inventory.slow}</span></span>
                         </div>
-                        <button onclick="tetrisGame.buyItem('slow', 60)" ${this.totalMoney >= 60 ? '' : 'disabled'}>Αγορά</button>
+                        <button onclick="tetrisGame.buyItem('slow', 60)" ${this.totalMoney >= 60 ? '' : 'disabled'}>Buy</button>
                     </div>
                 </div>
                 
                 <div class="store-actions">
                     <button class="next-level-btn" onclick="tetrisGame.nextStage()">
-                        ${this.currentStage >= 5 ? '🏆 Τέλος Παιχνιδιού' : '➡️ Επόμενο Επίπεδο'}
+                        ${this.currentStage >= 5 ? '🏆 Game End' : '➡️ Next Level'}
                     </button>
                 </div>
             </div>
@@ -471,10 +471,10 @@ class TetrisGame {
             // Not enough money - show feedback
             this.soundManager.playError();
             const button = event.target;
-            button.textContent = 'Δεν έχεις αρκετά!';
+            button.textContent = 'Not enough money!';
             button.style.background = '#ff4444';
             setTimeout(() => {
-                button.textContent = 'Αγορά';
+                button.textContent = 'Buy';
                 button.style.background = '';
             }, 1000);
         }
@@ -498,26 +498,26 @@ class TetrisGame {
         completeModal.className = 'store-modal';
         completeModal.innerHTML = `
             <div class="store-content">
-                <h2>🎊 Συγχαρητήρια! Απέδρασες! 🎊</h2>
+                <h2>🎊 Congratulations! You escaped! 🎊</h2>
                 <div class="completion-stats">
-                    <p>🏆 Ολοκλήρωσες όλα τα επίπεδα!</p>
-                    <p>💰 Συνολικά χρήματα: ${this.totalMoney}</p>
-                    <p>🧠 Είσαι ένας αληθινός escape artist!</p>
+                    <p>🏆 You completed all levels!</p>
+                    <p>💰 Total money: ${this.totalMoney}</p>
+                    <p>🧠 You are a true escape artist!</p>
                 </div>
                 
                 <div class="achievements">
-                    <h3>🏅 Επιτεύγματα:</h3>
+                    <h3>🏅 Achievements:</h3>
                     <div class="achievement-list">
-                        ${this.totalMoney >= 1000 ? '<p class="achievement">💎 Μεγαλοαγοραστής - Έχεις 1000+ χρήματα!</p>' : ''}
-                        ${this.inventory.dynamite >= 3 ? '<p class="achievement">💣 Bomber - Έχεις 3+ dynamites!</p>' : ''}
-                        ${this.inventory.shovel >= 2 ? '<p class="achievement">⛏️ Εργάτης - Έχεις 2+ shovels!</p>' : ''}
-                        <p class="achievement">🎯 Τέλειος Στόχος - Έφτασες το τέλος!</p>
+                        ${this.totalMoney >= 1000 ? '<p class="achievement">💎 Big Spender - You have 1000+ money!</p>' : ''}
+                        ${this.inventory.dynamite >= 3 ? '<p class="achievement">💣 Bomber - You have 3+ dynamites!</p>' : ''}
+                        ${this.inventory.shovel >= 2 ? '<p class="achievement">⛏️ Worker - You have 2+ shovels!</p>' : ''}
+                        <p class="achievement">🎯 Perfect Target - You reached the end!</p>
                     </div>
                 </div>
                 
                 <div class="store-actions">
                     <button class="next-level-btn" onclick="location.reload()">
-                        🔄 Παίξε Ξανά
+                        🔄 Play Again
                     </button>
                 </div>
             </div>
@@ -1303,12 +1303,12 @@ class TetrisGame {
             const timeRemaining = Math.max(0, this.timeLimit - timeElapsed);
             
             document.getElementById('stage-info').innerHTML = `
-                <h3>Στόχοι Πίστας</h3>
-                <p>Επίπεδο: ${this.currentStage}</p>
-                <p>Στόχος: ${this.stageGoals.minScore} πόντοι</p>
-                <p>Χρόνος: ${timeRemaining}s</p>
+                <h3>Stage Objectives</h3>
+                <p>Level: ${this.currentStage}</p>
+                <p>Target: ${this.stageGoals.minScore} points</p>
+                <p>Time: ${timeRemaining}s</p>
                 <p>Blocks: ${this.blocksUsed}/${this.maxBlocks}</p>
-                <p>Χρήματα: $${this.totalMoney}</p>
+                <p>Money: $${this.totalMoney}</p>
             `;
         }
     }
