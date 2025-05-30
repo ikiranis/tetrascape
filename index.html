@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tetrascape - Tetris Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <h1>Tetrascape</h1>
+            <div class="score-panel">
+                <div class="score">
+                    <span>Score:</span>
+                    <span id="score">0</span>
+                </div>
+                <div class="level">
+                    <span>Level:</span>
+                    <span id="level">1</span>
+                </div>
+                <div class="lines">
+                    <span>Lines:</span>
+                    <span id="lines">0</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="game-board">
+            <div class="main-game-area">
+                <canvas id="tetris-canvas" width="300" height="600"></canvas>
+                <div class="character-area">
+                    <div class="escape-track">
+                        <div class="character" id="character"></div>
+                        <div class="exit-door">🚪</div>
+                    </div>
+                </div>
+            </div>
+            <div class="side-panel">
+                <div class="stage-info" id="stage-info">
+                    <h3>Στόχοι Πίστας</h3>
+                    <p>Επίπεδο: 1</p>
+                    <p>Στόχος: 500 πόντοι</p>
+                    <p>Χρόνος: 120s</p>
+                    <p>Blocks: 0/50</p>
+                    <p>Χρήματα: $0</p>
+                </div>
+                <div class="next-piece">
+                    <h3>Next Piece</h3>
+                    <canvas id="next-canvas" width="120" height="120"></canvas>
+                </div>
+                <div class="inventory" id="inventory">
+                    <h4>Inventory:</h4>
+                    <p>💣: 0</p>
+                    <p>🔨: 0</p>
+                    <p>🔄: 0</p>
+                    <p>⏰: 0</p>
+                </div>
+                <div class="controls">
+                    <h3>Controls</h3>
+                    <p>← → Move</p>
+                    <p>↓ Soft Drop</p>
+                    <p>Space Rotate</p>
+                    <p>Shift Hard Drop</p>
+                    <p>1-4 Use Items</p>
+                    <p>P Pause</p>
+                </div>
+                <button id="start-button">Start Game</button>
+                <button id="pause-button" disabled>Pause</button>
+                <button id="restart-button" disabled>Restart</button>
+            </div>
+        </div>
+        
+        <div class="game-over" id="game-over" style="display: none;">
+            <h2>Game Over!</h2>
+            <p>Final Score: <span id="final-score">0</span></p>
+            <button onclick="location.reload()">Play Again</button>
+        </div>
+    </div>
+
+    <script src="tetris.js"></script>
+</body>
+</html>
