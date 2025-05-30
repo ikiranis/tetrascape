@@ -797,3 +797,35 @@ button:active:not(:disabled) {
     transform: scale(1.05);
     transition: all 0.3s ease;
 }
+
+/* GitHub link styling - positioned at bottom left */
+.github-link {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    font-size: 12px;
+    z-index: 1000;
+    font-family: 'Arial', sans-serif;
+    letter-spacing: 0.5px;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 4px 8px;
+    border-radius: 4px;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.github-link a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.github-link:hover {
+    background: rgba(0, 0, 0, 0.3);
+    transform: scale(1.05);
+    transition: all 0.3s ease;
+}
+
+.github-link:hover a {
+    color: rgba(255, 255, 255, 1);
+}
