@@ -118,10 +118,17 @@ class SoundManager {
     }
     
     playSlow() {
-        // Slow time effect - descending pitch
-        for (let i = 0; i < 10; i++) {
-            setTimeout(() => this.playTone(1000 - i * 80, 0.1, 'sine', 0.05), i * 50);
-        }
+        // Time extension effect - ascending celestial sounds
+        const frequencies = [440, 523, 659, 784, 880]; // A, C, E, G, A
+        frequencies.forEach((freq, index) => {
+            setTimeout(() => this.playTone(freq, 0.3, 'sine', 0.06), index * 100);
+        });
+        // Add sparkle effect
+        setTimeout(() => {
+            for (let i = 0; i < 8; i++) {
+                setTimeout(() => this.playTone(1200 + Math.random() * 400, 0.1, 'triangle', 0.03), i * 50);
+            }
+        }, 500);
     }
     
     playStageComplete() {
@@ -214,6 +221,12 @@ class TetrisGame {
             slowTimeLeft: 0
         };
         
+        // Piece statistics tracking
+        this.pieceStats = {
+            I: 0, O: 0, T: 0, S: 0, Z: 0, J: 0, L: 0
+        };
+        this.totalPieces = 0;
+        
         this.colors = [
             '#000000', // Empty
             '#ff0000', // I-piece (Red)
@@ -259,10 +272,12 @@ class TetrisGame {
         this.soundManager.enabled = !this.soundManager.enabled;
         const button = document.getElementById('sound-toggle');
         if (this.soundManager.enabled) {
-            button.textContent = '🔊 Sound ON';
+            button.textContent = '🔊';
+            button.title = 'Sound ON - Click to mute';
             button.classList.remove('muted');
         } else {
-            button.textContent = '🔇 Sound OFF';
+            button.textContent = '🔇';
+            button.title = 'Sound OFF - Click to enable';
             button.classList.add('muted');
         }
     }
@@ -327,7 +342,7 @@ class TetrisGame {
         
         setTimeout(() => {
             this.showStore(totalEarned);
-        }, 2000);
+        }, 3000); // Increased delay to 3 seconds
         
         // Play escape sound after a delay
         setTimeout(() => {
@@ -368,6 +383,7 @@ class TetrisGame {
                             <span class="item-name">Dynamite</span>
                             <span class="item-desc">Σκάει το τρέχον κομμάτι</span>
                             <span class="item-price">50$</span>
+                            <span class="item-inventory">Έχεις: <span id="dynamite-count">${this.inventory.dynamite}</span></span>
                         </div>
                         <button onclick="tetrisGame.buyItem('dynamite', 50)" ${this.totalMoney >= 50 ? '' : 'disabled'}>Αγορά</button>
                     </div>
@@ -377,6 +393,7 @@ class TetrisGame {
                             <span class="item-name">Shovel</span>
                             <span class="item-desc">Καθαρίζει κάθετη γραμμή</span>
                             <span class="item-price">75$</span>
+                            <span class="item-inventory">Έχεις: <span id="shovel-count">${this.inventory.shovel}</span></span>
                         </div>
                         <button onclick="tetrisGame.buyItem('shovel', 75)" ${this.totalMoney >= 75 ? '' : 'disabled'}>Αγορά</button>
                     </div>
@@ -386,15 +403,17 @@ class TetrisGame {
                             <span class="item-name">Trade</span>
                             <span class="item-desc">Αλλάζει το τρέχον κομμάτι</span>
                             <span class="item-price">40$</span>
+                            <span class="item-inventory">Έχεις: <span id="trade-count">${this.inventory.trade}</span></span>
                         </div>
                         <button onclick="tetrisGame.buyItem('trade', 40)" ${this.totalMoney >= 40 ? '' : 'disabled'}>Αγορά</button>
                     </div>
                     <div class="store-item ${this.totalMoney >= 60 ? '' : 'disabled'}">
                         <div class="item-icon">⏰</div>
                         <div class="item-info">
-                            <span class="item-name">Slow Time</span>
-                            <span class="item-desc">Μειώνει την ταχύτητα</span>
+                            <span class="item-name">Extra Time</span>
+                            <span class="item-desc">Προσθέτει +10 δευτερόλεπτα</span>
                             <span class="item-price">60$</span>
+                            <span class="item-inventory">Έχεις: <span id="slow-count">${this.inventory.slow}</span></span>
                         </div>
                         <button onclick="tetrisGame.buyItem('slow', 60)" ${this.totalMoney >= 60 ? '' : 'disabled'}>Αγορά</button>
                     </div>
@@ -420,6 +439,12 @@ class TetrisGame {
             const totalMoneySpan = document.querySelector('#store-modal .total-money');
             if (totalMoneySpan) {
                 totalMoneySpan.textContent = this.totalMoney;
+            }
+            
+            // Update inventory count in store
+            const inventoryCount = document.getElementById(item + '-count');
+            if (inventoryCount) {
+                inventoryCount.textContent = this.inventory[item];
             }
             
             // Update all buttons state
@@ -506,6 +531,33 @@ class TetrisGame {
                 <p>⏰: ${this.inventory.slow}</p>
             `;
         }
+    }
+    
+    updatePieceStatsDisplay() {
+        const statsGrid = document.getElementById('stats-grid');
+        if (!statsGrid) return;
+        
+        const pieceIcons = {
+            I: '🟦', O: '🟨', T: '🟪', S: '🟩', Z: '🟥', J: '🟫', L: '🟧'
+        };
+        
+        let html = '';
+        Object.keys(this.pieceStats).forEach(piece => {
+            const count = this.pieceStats[piece];
+            const percentage = this.totalPieces > 0 ? ((count / this.totalPieces) * 100).toFixed(1) : '0.0';
+            
+            html += `
+                <div class="stat-item">
+                    <span class="piece-icon">${pieceIcons[piece]}</span>
+                    <div class="stat-numbers">
+                        <div class="stat-count">${count}</div>
+                        <div class="stat-percent">${percentage}%</div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        statsGrid.innerHTML = html;
     }
     
     usePowerup(type) {
@@ -616,10 +668,8 @@ class TetrisGame {
         this.triggerPowerupAnimation('slow');
         this.soundManager.playSlow();
         
-        // Slow down the game for 10 seconds
-        this.activePowerups.slowActive = true;
-        this.activePowerups.slowTimeLeft = 10000; // 10 seconds
-        this.dropInterval *= 2; // Double the drop interval (half speed)
+        // Add 10 seconds to the time limit
+        this.timeLimit += 10;
     }
     
     updateCharacterProgress() {
@@ -690,7 +740,7 @@ class TetrisGame {
         } else if (this.characterElement.classList.contains('trade-animation')) {
             characterEmoji = '🤝💱'; // Trading/exchanging
         } else if (this.characterElement.classList.contains('slow-animation')) {
-            characterEmoji = '⏳⌛'; // Time manipulation
+            characterEmoji = '⏰✨'; // Time extension effect
         } else {
             // Normal state-based emojis
             switch(this.characterState) {
@@ -714,6 +764,11 @@ class TetrisGame {
         const randomKey = pieceKeys[Math.floor(Math.random() * pieceKeys.length)];
         const piece = this.pieces[randomKey];
         
+        // Track piece statistics
+        this.pieceStats[randomKey]++;
+        this.totalPieces++;
+        this.updatePieceStatsDisplay();
+        
         return {
             shape: piece.shape.map(row => [...row]),
             color: piece.color,
@@ -732,6 +787,12 @@ class TetrisGame {
         this.stageCompleted = false;
         this.characterProgress = 0;
         this.initBoard();
+        
+        // Reset piece statistics for new stage
+        this.pieceStats = {
+            I: 0, O: 0, T: 0, S: 0, Z: 0, J: 0, L: 0
+        };
+        this.totalPieces = 0;
         
         // Reset inventory for stage 1 only
         if (this.currentStage === 1) {
@@ -760,6 +821,7 @@ class TetrisGame {
         document.getElementById('game-over').style.display = 'none';
         
         this.updateDisplay();
+        this.updatePieceStatsDisplay();
         this.gameLoop();
     }
     
@@ -767,7 +829,14 @@ class TetrisGame {
         if (!this.gameRunning) return;
         
         this.gamePaused = !this.gamePaused;
-        document.getElementById('pause-button').textContent = this.gamePaused ? 'Resume' : 'Pause';
+        const pauseButton = document.getElementById('pause-button');
+        if (this.gamePaused) {
+            pauseButton.textContent = '▶️';
+            pauseButton.title = 'Resume';
+        } else {
+            pauseButton.textContent = '⏸️';
+            pauseButton.title = 'Pause';
+        }
         
         if (!this.gamePaused) {
             this.gameLoop();
@@ -1154,12 +1223,13 @@ class TetrisGame {
         document.getElementById('level').textContent = this.level;
         document.getElementById('lines').textContent = this.lines;
         
-        // Update stage info
-        if (this.stageGoals) {
+        // Update stage info with live timer
+        if (this.stageGoals && this.gameRunning && !this.gamePaused) {
             const timeElapsed = Math.floor((Date.now() - this.stageStartTime) / 1000);
             const timeRemaining = Math.max(0, this.timeLimit - timeElapsed);
             
             document.getElementById('stage-info').innerHTML = `
+                <h3>Στόχοι Πίστας</h3>
                 <p>Επίπεδο: ${this.currentStage}</p>
                 <p>Στόχος: ${this.stageGoals.minScore} πόντοι</p>
                 <p>Χρόνος: ${timeRemaining}s</p>
@@ -1169,6 +1239,7 @@ class TetrisGame {
         }
         
         this.updateInventoryDisplay();
+        this.updatePieceStatsDisplay();
     }
 }
 

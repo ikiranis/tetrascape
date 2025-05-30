@@ -27,6 +27,15 @@
         </div>
         
         <div class="game-board">
+            <div class="left-panel">
+                <div class="piece-stats" id="piece-stats">
+                    <h4>Στατιστικά Κομματιών</h4>
+                    <div class="stats-grid" id="stats-grid">
+                        <!-- Statistics will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+            
             <div class="main-game-area">
                 <canvas id="tetris-canvas" width="300" height="600"></canvas>
                 <div class="character-area">
@@ -36,7 +45,15 @@
                     </div>
                 </div>
             </div>
+            
             <div class="side-panel">
+                <!-- Control Buttons - Right Side -->
+                <div class="control-buttons">
+                    <button id="start-button" class="control-btn" title="Start Game">▶️</button>
+                    <button id="pause-button" class="control-btn" disabled title="Pause">⏸️</button>
+                    <button id="restart-button" class="control-btn" disabled title="Restart">🔄</button>
+                    <button id="sound-toggle" class="control-btn sound-button" title="Toggle Sound">🔊</button>
+                </div>
                 <div class="stage-info" id="stage-info">
                     <h3>Στόχοι Πίστας</h3>
                     <p>Επίπεδο: 1</p>
@@ -62,13 +79,12 @@
                     <p>↓ Soft Drop</p>
                     <p>Space Rotate</p>
                     <p>Shift Hard Drop</p>
-                    <p>1-4 Use Items</p>
+                    <p>1 💣 Dynamite</p>
+                    <p>2 🔨 Shovel</p>
+                    <p>3 🔄 Trade</p>
+                    <p>4 ⏰ +Time</p>
                     <p>P Pause</p>
                 </div>
-                <button id="start-button">Start Game</button>
-                <button id="pause-button" disabled>Pause</button>
-                <button id="restart-button" disabled>Restart</button>
-                <button id="sound-toggle" class="sound-button">🔊 Sound ON</button>
             </div>
         </div>
         
