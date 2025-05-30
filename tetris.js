@@ -1,3 +1,165 @@
+// Sound Manager
+class SoundManager {
+    constructor() {
+        this.audioContext = null;
+        this.enabled = true;
+        this.init();
+    }
+    
+    init() {
+        try {
+            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        } catch (e) {
+            console.warn('Web Audio API not supported');
+            this.enabled = false;
+        }
+    }
+    
+    // Create different sound effects
+    playTone(frequency, duration, type = 'sine', volume = 0.1) {
+        if (!this.enabled || !this.audioContext) return;
+        
+        const oscillator = this.audioContext.createOscillator();
+        const gainNode = this.audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(this.audioContext.destination);
+        
+        oscillator.frequency.setValueAtTime(frequency, this.audioContext.currentTime);
+        oscillator.type = type;
+        
+        gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+        gainNode.gain.linearRampToValueAtTime(volume, this.audioContext.currentTime + 0.01);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + duration);
+        
+        oscillator.start(this.audioContext.currentTime);
+        oscillator.stop(this.audioContext.currentTime + duration);
+    }
+    
+    // Specific sound effects
+    playMove() {
+        this.playTone(200, 0.1, 'square', 0.05);
+    }
+    
+    playRotate() {
+        this.playTone(300, 0.15, 'triangle', 0.06);
+    }
+    
+    playDrop() {
+        this.playTone(100, 0.2, 'sawtooth', 0.08);
+    }
+    
+    playSoftDrop() {
+        // Soft drop sound - subtle but noticeable
+        this.playTone(150, 0.1, 'sine', 0.04);
+    }
+    
+    playHardDrop() {
+        // More intense drop sound
+        this.playTone(80, 0.3, 'sawtooth', 0.12);
+        setTimeout(() => this.playTone(60, 0.2, 'square', 0.08), 100);
+    }
+    
+    playLineClear() {
+        // Pleasant ascending notes
+        setTimeout(() => this.playTone(400, 0.15, 'sine', 0.1), 0);
+        setTimeout(() => this.playTone(500, 0.15, 'sine', 0.1), 50);
+        setTimeout(() => this.playTone(600, 0.15, 'sine', 0.1), 100);
+        setTimeout(() => this.playTone(700, 0.2, 'sine', 0.1), 150);
+    }
+    
+    playTetris() {
+        // Special tetris sound - more explosive and elaborate
+        // Lower boom sounds with higher celebration notes
+        this.playTone(40, 0.4, 'sawtooth', 0.2); // Deep boom
+        setTimeout(() => this.playTone(60, 0.3, 'square', 0.15), 50);
+        setTimeout(() => this.playTone(80, 0.2, 'sawtooth', 0.12), 100);
+        
+        // Triumphant ascending melody with more energy
+        const notes = [523, 659, 784, 1047, 1319]; // C, E, G, C, E (higher octave)
+        notes.forEach((note, index) => {
+            setTimeout(() => this.playTone(note, 0.25, 'triangle', 0.15), 200 + index * 80);
+            // Add harmonics for richer sound
+            setTimeout(() => this.playTone(note * 1.5, 0.2, 'sine', 0.08), 220 + index * 80);
+        });
+        
+        // Final explosive flourish
+        setTimeout(() => {
+            this.playTone(100, 0.2, 'sawtooth', 0.18);
+            setTimeout(() => this.playTone(1568, 0.3, 'sine', 0.12), 50); // High G
+        }, 600);
+    }
+    
+    playPowerup() {
+        // Power-up activation sound
+        this.playTone(800, 0.1, 'square', 0.1);
+        setTimeout(() => this.playTone(1000, 0.1, 'square', 0.1), 100);
+        setTimeout(() => this.playTone(1200, 0.2, 'sine', 0.08), 200);
+    }
+    
+    playExplosion() {
+        // Explosion sound for dynamite
+        this.playTone(50, 0.3, 'sawtooth', 0.15);
+        setTimeout(() => this.playTone(80, 0.2, 'square', 0.12), 50);
+        setTimeout(() => this.playTone(40, 0.4, 'sawtooth', 0.1), 100);
+    }
+    
+    playDig() {
+        // Digging sound for shovel
+        for (let i = 0; i < 5; i++) {
+            setTimeout(() => this.playTone(150 + Math.random() * 50, 0.1, 'sawtooth', 0.06), i * 100);
+        }
+    }
+    
+    playTrade() {
+        // Trade sound - two-tone exchange
+        this.playTone(600, 0.15, 'triangle', 0.08);
+        setTimeout(() => this.playTone(400, 0.15, 'triangle', 0.08), 150);
+    }
+    
+    playSlow() {
+        // Slow time effect - descending pitch
+        for (let i = 0; i < 10; i++) {
+            setTimeout(() => this.playTone(1000 - i * 80, 0.1, 'sine', 0.05), i * 50);
+        }
+    }
+    
+    playStageComplete() {
+        // Victory fanfare
+        const melody = [523, 659, 784, 1047]; // C, E, G, C
+        melody.forEach((note, index) => {
+            setTimeout(() => this.playTone(note, 0.3, 'triangle', 0.1), index * 200);
+        });
+    }
+    
+    playGameOver() {
+        // Sad descending notes
+        const notes = [400, 350, 300, 250];
+        notes.forEach((note, index) => {
+            setTimeout(() => this.playTone(note, 0.4, 'triangle', 0.08), index * 300);
+        });
+    }
+    
+    playEscape() {
+        // Escape success - ascending triumphant notes
+        const notes = [262, 330, 392, 523, 659, 784]; // C major scale
+        notes.forEach((note, index) => {
+            setTimeout(() => this.playTone(note, 0.25, 'sine', 0.1), index * 100);
+        });
+    }
+    
+    playPurchase() {
+        // Purchase confirmation sound
+        this.playTone(600, 0.1, 'triangle', 0.08);
+        setTimeout(() => this.playTone(800, 0.15, 'sine', 0.06), 100);
+    }
+    
+    playError() {
+        // Error/invalid action sound
+        this.playTone(150, 0.3, 'sawtooth', 0.1);
+    }
+}
+
 // Tetris Game Implementation
 class TetrisGame {
     constructor() {
@@ -5,6 +167,9 @@ class TetrisGame {
         this.ctx = this.canvas.getContext('2d');
         this.nextCanvas = document.getElementById('next-canvas');
         this.nextCtx = this.nextCanvas.getContext('2d');
+        
+        // Initialize sound manager
+        this.soundManager = new SoundManager();
         
         this.BOARD_WIDTH = 10;
         this.BOARD_HEIGHT = 20;
@@ -87,15 +252,28 @@ class TetrisGame {
         document.getElementById('start-button').addEventListener('click', () => this.startGame());
         document.getElementById('pause-button').addEventListener('click', () => this.togglePause());
         document.getElementById('restart-button').addEventListener('click', () => this.restartGame());
+        document.getElementById('sound-toggle').addEventListener('click', () => this.toggleSound());
+    }
+    
+    toggleSound() {
+        this.soundManager.enabled = !this.soundManager.enabled;
+        const button = document.getElementById('sound-toggle');
+        if (this.soundManager.enabled) {
+            button.textContent = '🔊 Sound ON';
+            button.classList.remove('muted');
+        } else {
+            button.textContent = '🔇 Sound OFF';
+            button.classList.add('muted');
+        }
     }
     
     generateStageGoals() {
         const stages = [
-            { minScore: 500, timeLimit: 120, maxBlocks: 50, reward: 100 },
-            { minScore: 1000, timeLimit: 100, maxBlocks: 45, reward: 150 },
-            { minScore: 1500, timeLimit: 90, maxBlocks: 40, reward: 200 },
-            { minScore: 2500, timeLimit: 80, maxBlocks: 35, reward: 300 },
-            { minScore: 4000, timeLimit: 70, maxBlocks: 30, reward: 500 }
+            { minScore: 500, timeLimit: 180, maxBlocks: 50, reward: 100 },
+            { minScore: 1000, timeLimit: 150, maxBlocks: 45, reward: 150 },
+            { minScore: 1500, timeLimit: 135, maxBlocks: 40, reward: 200 },
+            { minScore: 2500, timeLimit: 120, maxBlocks: 35, reward: 300 },
+            { minScore: 4000, timeLimit: 105, maxBlocks: 30, reward: 500 }
         ];
         
         const stageIndex = Math.min(this.currentStage - 1, stages.length - 1);
@@ -131,6 +309,9 @@ class TetrisGame {
         this.stageCompleted = true;
         this.gameRunning = false;
         
+        // Play stage complete sound
+        this.soundManager.playStageComplete();
+        
         // Trigger escape animation
         this.setCharacterState('escaping');
         if (this.characterElement) {
@@ -147,10 +328,16 @@ class TetrisGame {
         setTimeout(() => {
             this.showStore(totalEarned);
         }, 2000);
+        
+        // Play escape sound after a delay
+        setTimeout(() => {
+            this.soundManager.playEscape();
+        }, 1000);
     }
     
     failStage() {
         this.gameRunning = false;
+        this.soundManager.playGameOver();
         document.getElementById('final-score').textContent = this.score;
         document.getElementById('game-over').style.display = 'flex';
         document.getElementById('start-button').disabled = false;
@@ -227,6 +414,7 @@ class TetrisGame {
         if (this.totalMoney >= cost) {
             this.totalMoney -= cost;
             this.inventory[item]++;
+            this.soundManager.playPurchase();
             
             // Update store display
             const totalMoneySpan = document.querySelector('#store-modal .total-money');
@@ -251,6 +439,7 @@ class TetrisGame {
             this.updateInventoryDisplay();
         } else {
             // Not enough money - show feedback
+            this.soundManager.playError();
             const button = event.target;
             button.textContent = 'Δεν έχεις αρκετά!';
             button.style.background = '#ff4444';
@@ -320,9 +509,13 @@ class TetrisGame {
     }
     
     usePowerup(type) {
-        if (this.inventory[type] <= 0) return;
+        if (this.inventory[type] <= 0) {
+            this.soundManager.playError();
+            return;
+        }
         
         this.inventory[type]--;
+        this.soundManager.playPowerup();
         this.updateInventoryDisplay();
         
         switch(type) {
@@ -343,6 +536,7 @@ class TetrisGame {
     
     useDynamite() {
         this.triggerPowerupAnimation('dynamite');
+        this.soundManager.playExplosion();
         
         if (!this.currentPiece) return;
         
@@ -396,6 +590,7 @@ class TetrisGame {
     
     useShovel() {
         this.triggerPowerupAnimation('shovel');
+        this.soundManager.playDig();
         
         if (!this.currentPiece) return;
         
@@ -411,6 +606,7 @@ class TetrisGame {
     
     useTrade() {
         this.triggerPowerupAnimation('trade');
+        this.soundManager.playTrade();
         
         // Change current piece to a random new one
         this.currentPiece = this.getRandomPiece();
@@ -418,6 +614,7 @@ class TetrisGame {
     
     useSlow() {
         this.triggerPowerupAnimation('slow');
+        this.soundManager.playSlow();
         
         // Slow down the game for 10 seconds
         this.activePowerups.slowActive = true;
@@ -623,7 +820,7 @@ class TetrisGame {
                 break;
             case 'ArrowDown':
                 e.preventDefault();
-                this.dropPiece();
+                this.softDrop();
                 break;
             case 'Space':
                 e.preventDefault();
@@ -662,6 +859,12 @@ class TetrisGame {
         if (this.isValidMove(this.currentPiece.x + dx, this.currentPiece.y + dy, this.currentPiece.shape)) {
             this.currentPiece.x += dx;
             this.currentPiece.y += dy;
+            
+            // Play move sound only for horizontal movement
+            if (dx !== 0) {
+                this.soundManager.playMove();
+            }
+            
             return true;
         }
         return false;
@@ -671,6 +874,7 @@ class TetrisGame {
         const rotated = this.rotateMatrix(this.currentPiece.shape);
         if (this.isValidMove(this.currentPiece.x, this.currentPiece.y, rotated)) {
             this.currentPiece.shape = rotated;
+            this.soundManager.playRotate();
         }
     }
     
@@ -690,6 +894,28 @@ class TetrisGame {
     
     dropPiece() {
         if (!this.movePiece(0, 1)) {
+            this.soundManager.playDrop();
+            this.placePiece();
+            this.clearLines();
+            this.blocksUsed++;
+            this.currentPiece = this.nextPiece;
+            this.nextPiece = this.getRandomPiece();
+            
+            if (!this.isValidMove(this.currentPiece.x, this.currentPiece.y, this.currentPiece.shape)) {
+                this.failStage();
+            }
+        }
+    }
+    
+    softDrop() {
+        // Manual soft drop triggered by down arrow key
+        if (this.movePiece(0, 1)) {
+            this.score += 1; // Bonus point for soft drop
+            this.soundManager.playSoftDrop();
+            this.updateDisplay();
+        } else {
+            // If piece can't move down, place it
+            this.soundManager.playDrop();
             this.placePiece();
             this.clearLines();
             this.blocksUsed++;
@@ -706,6 +932,7 @@ class TetrisGame {
         while (this.movePiece(0, 1)) {
             this.score += 2; // Bonus points for hard drop
         }
+        this.soundManager.playHardDrop();
         this.updateDisplay();
     }
     
@@ -758,6 +985,14 @@ class TetrisGame {
             this.score += this.calculateScore(linesCleared);
             this.level = Math.floor(this.lines / 10) + 1;
             this.dropInterval = Math.max(100, 1000 - (this.level - 1) * 100);
+            
+            // Play appropriate sound based on lines cleared
+            if (linesCleared === 4) {
+                this.soundManager.playTetris();
+            } else {
+                this.soundManager.playLineClear();
+            }
+            
             this.updateDisplay();
         }
     }

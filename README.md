@@ -44,11 +44,11 @@ Each stage has three requirements that must be met within the limits:
 
 | Stage | Score Target | Time Limit | Block Limit | Difficulty |
 |-------|-------------|------------|-------------|------------|
-| 1     | 1,000       | 120s       | 150 blocks  | Beginner   |
-| 2     | 2,500       | 100s       | 130 blocks  | Easy       |
-| 3     | 5,000       | 90s        | 120 blocks  | Medium     |
-| 4     | 8,000       | 80s        | 110 blocks  | Hard       |
-| 5     | 12,000      | 70s        | 100 blocks  | Expert     |
+| 1     | 1,000       | 180s       | 150 blocks  | Beginner   |
+| 2     | 2,500       | 150s       | 130 blocks  | Easy       |
+| 3     | 5,000       | 135s       | 120 blocks  | Medium     |
+| 4     | 8,000       | 120s       | 110 blocks  | Hard       |
+| 5     | 12,000      | 105s       | 100 blocks  | Expert     |
 
 ### Stage Completion
 To advance to the next stage, you must:
@@ -124,6 +124,17 @@ The game features all 7 standard Tetris pieces:
 - **Progressive Difficulty**: Each stage increases the challenge
 - **Achievement System**: Track your accomplishments
 - **Responsive Design**: Works on desktop and mobile devices
+- **Sound Effects**: Dynamic audio feedback for all game actions (can be toggled on/off)
+
+## 🔊 Sound System
+
+The game includes comprehensive sound effects:
+- **Movement Sounds**: Piece movement, rotation, and dropping
+- **Line Clear Effects**: Different sounds for single lines vs. Tetris (4 lines)
+- **Power-up Audio**: Unique sounds for each power-up activation
+- **Stage Progression**: Victory fanfares and completion sounds
+- **Character Actions**: Audio feedback for character animations
+- **Toggle Control**: Sound can be enabled/disabled via the 🔊/🔇 button
 
 ## 🚀 Getting Started
 
