@@ -203,6 +203,9 @@ class TetrisGame {
         this.blocksUsed = 0;
         this.stageCompleted = false;
         
+        // Timer interval for live time updates
+        this.timerInterval = null;
+        
         // Character system - no longer drawn on canvas
         this.characterElement = document.getElementById('character');
         this.characterState = 'waiting'; // waiting, working, escaping
@@ -323,6 +326,7 @@ class TetrisGame {
     completeStage() {
         this.stageCompleted = true;
         this.gameRunning = false;
+        this.stopTimerInterval(); // Stop timer when stage completes
         
         // Play stage complete sound
         this.soundManager.playStageComplete();
@@ -352,6 +356,7 @@ class TetrisGame {
     
     failStage() {
         this.gameRunning = false;
+        this.stopTimerInterval(); // Stop timer when stage fails
         this.soundManager.playGameOver();
         document.getElementById('final-score').textContent = this.score;
         document.getElementById('game-over').style.display = 'flex';
@@ -710,6 +715,7 @@ class TetrisGame {
         
         // Change current piece to a random new one
         this.currentPiece = this.getRandomPiece();
+        this.updateDisplay(); // Update score display after new piece
     }
     
     useSlow() {
@@ -817,6 +823,9 @@ class TetrisGame {
         this.totalPieces++;
         this.updatePieceStatsDisplay();
         
+        // Add 1 point for new piece spawn
+        this.score += 1;
+        
         return {
             shape: piece.shape.map(row => [...row]),
             color: piece.color,
@@ -855,6 +864,9 @@ class TetrisGame {
         // Generate stage goals
         this.generateStageGoals();
         
+        // Start timer interval for live time updates
+        this.startTimerInterval();
+        
         // Initialize character
         this.setCharacterState('waiting');
         this.updateCharacterProgress();
@@ -881,9 +893,13 @@ class TetrisGame {
         if (this.gamePaused) {
             pauseButton.textContent = '▶️';
             pauseButton.title = 'Resume';
+            // Stop timer interval when paused
+            this.stopTimerInterval();
         } else {
             pauseButton.textContent = '⏸️';
             pauseButton.title = 'Pause';
+            // Resume timer interval when unpaused
+            this.startTimerInterval();
         }
         
         if (!this.gamePaused) {
@@ -1017,6 +1033,7 @@ class TetrisGame {
             this.blocksUsed++;
             this.currentPiece = this.nextPiece;
             this.nextPiece = this.getRandomPiece();
+            this.updateDisplay(); // Update score display after new piece
             
             if (!this.isValidMove(this.currentPiece.x, this.currentPiece.y, this.currentPiece.shape)) {
                 this.failStage();
@@ -1027,7 +1044,7 @@ class TetrisGame {
     softDrop() {
         // Manual soft drop triggered by down arrow key
         if (this.movePiece(0, 1)) {
-            this.score += 1; // Bonus point for soft drop
+            // No points for soft drop movement
             this.soundManager.playSoftDrop();
             this.updateDisplay();
         } else {
@@ -1038,6 +1055,7 @@ class TetrisGame {
             this.blocksUsed++;
             this.currentPiece = this.nextPiece;
             this.nextPiece = this.getRandomPiece();
+            this.updateDisplay(); // Update score display after new piece
             
             if (!this.isValidMove(this.currentPiece.x, this.currentPiece.y, this.currentPiece.shape)) {
                 this.failStage();
@@ -1047,7 +1065,7 @@ class TetrisGame {
     
     hardDrop() {
         while (this.movePiece(0, 1)) {
-            this.score += 2; // Bonus points for hard drop
+            // No points for hard drop movement
         }
         this.soundManager.playHardDrop();
         this.updateDisplay();
@@ -1272,6 +1290,14 @@ class TetrisGame {
         document.getElementById('lines').textContent = this.lines;
         
         // Update stage info with live timer
+        this.updateStageInfoDisplay();
+        
+        this.updateInventoryDisplay();
+        this.updatePieceStatsDisplay();
+    }
+
+    // Separate method for updating stage info display (used by timer interval)
+    updateStageInfoDisplay() {
         if (this.stageGoals && this.gameRunning && !this.gamePaused) {
             const timeElapsed = Math.floor((Date.now() - this.stageStartTime) / 1000);
             const timeRemaining = Math.max(0, this.timeLimit - timeElapsed);
@@ -1285,9 +1311,26 @@ class TetrisGame {
                 <p>Χρήματα: $${this.totalMoney}</p>
             `;
         }
+    }
+
+    // Timer interval methods for live time updates
+    startTimerInterval() {
+        // Clear any existing interval
+        this.stopTimerInterval();
         
-        this.updateInventoryDisplay();
-        this.updatePieceStatsDisplay();
+        // Start new interval to update timer every second
+        this.timerInterval = setInterval(() => {
+            if (this.gameRunning && !this.gamePaused) {
+                this.updateStageInfoDisplay();
+            }
+        }, 1000);
+    }
+
+    stopTimerInterval() {
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval);
+            this.timerInterval = null;
+        }
     }
 }
 
