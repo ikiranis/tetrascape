@@ -2,6 +2,9 @@
 
 Welcome to **Tetrascape**, a unique twist on the classic Tetris game that transforms into an exciting escape-puzzle adventure! Complete stage objectives to help your character escape through increasingly challenging levels.
 
+## 🎮 Play Online
+**[🕹️ Play Tetrascape Now!](https://tetrascape.apps4net.eu)**
+
 ![30-05--2025_23-29](https://github.com/user-attachments/assets/3131b7d6-6472-4950-9ed7-935e468bd7be)
 
 
