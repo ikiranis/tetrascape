@@ -151,10 +151,12 @@ body {
     border-radius: 5px;
 }
 
-.piece-icon {
-    font-size: 16px;
-    width: 20px;
-    text-align: center;
+.piece-canvas {
+    width: 30px;
+    height: 30px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 3px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .stat-numbers {
@@ -498,12 +500,7 @@ button:active:not(:disabled) {
     transform: translateY(0);
 }
 
-.sound-button {
-    background: linear-gradient(45deg, #9b59b6, #8e44ad);
-}
-
 .sound-button.muted {
-    background: linear-gradient(45deg, #95a5a6, #7f8c8d);
     opacity: 0.7;
 }
 

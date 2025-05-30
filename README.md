@@ -6,6 +6,27 @@ Welcome to **Tetrascape**, a unique twist on the classic Tetris game that transf
 
 Tetrascape combines traditional Tetris mechanics with escape-game elements. Your goal is not just to clear lines, but to achieve specific objectives within time and block limits to progress through 5 challenging stages. Watch your character move along the escape track below the game board as you make progress toward your goals!
 
+## 🎮 Game Layout & Controls
+
+### Control Scheme
+- **Movement**: Arrow keys (←→↓) or WASD
+- **Rotation**: Space bar for clockwise rotation
+- **Hard Drop**: Shift key for instant piece placement
+- **Power-ups**: Number keys 1-4 for activating items
+- **Game Controls**: Dedicated buttons for start/pause/restart/sound toggle
+
+### Interface Layout
+The game features a modern three-panel layout:
+- **Left Panel**: Live piece statistics with authentic Tetris piece graphics
+- **Center Panel**: Main game board with character escape track below
+- **Right Panel**: Game controls, stage information, next piece preview, and inventory display
+
+### Live Timer Display
+The game includes a real-time countdown timer that updates every frame, showing:
+- Remaining time in seconds
+- Visual progress indicators
+- Time bonus calculations for store rewards
+
 ## 🕹️ How to Play
 
 ### Basic Controls
@@ -18,10 +39,10 @@ Tetrascape combines traditional Tetris mechanics with escape-game elements. Your
 ### Power-ups
 Use special power-ups to overcome difficult situations:
 
-- **🧨 Dynamite** (D key): Drops the current piece to the bottom and creates a 3x3 explosion around each block, clearing surrounding pieces
-- **🪄 Shovel** (F key): Clears an entire vertical column where your current piece would land
-- **🔄 Trade** (G key): Swaps your current piece with the next piece
-- **⏰ Slow** (H key): Temporarily reduces the game speed for easier placement
+- **💣 Dynamite** (1 key): Drops the current piece to the bottom and creates a 3x3 explosion around each block, clearing surrounding pieces
+- **🔨 Shovel** (2 key): Clears an entire vertical column where your current piece would land
+- **🔄 Trade** (3 key): Changes your current piece to a completely new random piece
+- **⏰ Extra Time** (4 key): Adds +10 seconds to your time limit for the current stage
 
 ## 🏃‍♂️ Character System
 
@@ -32,23 +53,23 @@ Your character appears below the game board and moves along the escape track bas
 - **🏃 Escaping**: Character runs toward the exit when close to completing objectives
 
 Each power-up triggers unique character animations:
-- Dynamite: Throwing and explosion animation
-- Shovel: Digging animation  
-- Trade: Handoff gesture animation
-- Slow: Time manipulation effect
+- Dynamite: Throwing and explosion animation with emoji sequence 💣🧨
+- Shovel: Digging animation with emoji sequence ⛏️🕳️
+- Trade: Handoff gesture animation with emoji sequence 🤝💱
+- Extra Time: Time manipulation effect with emoji sequence ⏰✨
 
 ## 🎖️ Stage Progression
 
 ### Stage Objectives
 Each stage has three requirements that must be met within the limits:
 
-| Stage | Score Target | Time Limit | Block Limit | Difficulty |
-|-------|-------------|------------|-------------|------------|
-| 1     | 1,000       | 180s       | 150 blocks  | Beginner   |
-| 2     | 2,500       | 150s       | 130 blocks  | Easy       |
-| 3     | 5,000       | 135s       | 120 blocks  | Medium     |
-| 4     | 8,000       | 120s       | 110 blocks  | Hard       |
-| 5     | 12,000      | 105s       | 100 blocks  | Expert     |
+| Stage | Score Target | Time Limit | Block Limit | Reward Money |
+|-------|-------------|------------|-------------|--------------|
+| 1     | 500         | 180s       | 50 blocks   | $100         |
+| 2     | 1,000       | 150s       | 45 blocks   | $150         |
+| 3     | 1,500       | 135s       | 40 blocks   | $200         |
+| 4     | 2,500       | 120s       | 35 blocks   | $300         |
+| 5     | 4,000       | 105s       | 30 blocks   | $500         |
 
 ### Stage Completion
 To advance to the next stage, you must:
@@ -67,37 +88,42 @@ You fail a stage if:
 After each stage (completed or failed), visit the store to purchase power-ups:
 
 ### Power-up Pricing
-- **🧨 Dynamite**: $50 → $75 → $100 → $125 → $150 (increases each stage)
-- **🪄 Shovel**: $40 → $60 → $80 → $100 → $120
-- **🔄 Trade**: $30 → $45 → $60 → $75 → $90  
-- **⏰ Slow**: $20 → $30 → $40 → $50 → $60
+- **💣 Dynamite**: $50
+- **🔨 Shovel**: $75
+- **🔄 Trade**: $40
+- **⏰ Extra Time**: $60
 
 ### Money System
-- **Stage Completion Bonus**: $200
-- **Remaining Time Bonus**: $5 per second left
-- **Remaining Blocks Bonus**: $2 per unused block
-- **Starting Money**: $400 (first stage only)
+- **Stage Completion Bonus**: Varies by stage ($100-$500)
+- **Remaining Time Bonus**: $10 per second left
+- **Remaining Blocks Bonus**: $5 per unused block
 - **Starting Inventory**: 5 of each power-up (first stage only)
 
 ## 🏆 Achievement System
 
-Earn achievements for exceptional performance:
-- **🎯 Perfect Score**: Reach exactly the target score
-- **⚡ Speed Runner**: Complete with 30+ seconds remaining
-- **💎 Efficient**: Use 20+ fewer blocks than limit
-- **🧨 Demolition Expert**: Use 5+ dynamite in one stage
-- **🪄 Excavator**: Use 5+ shovel in one stage
+Unlock achievements upon game completion:
+- **💎 Μεγαλοαγοραστής**: Accumulate 1000+ total money
+- **💣 Bomber**: Own 3+ dynamite power-ups
+- **⛏️ Εργάτης**: Own 2+ shovel power-ups
+- **🎯 Τέλειος Στόχος**: Complete all 5 stages successfully
 
-## 🎲 Tetris Pieces
+## 🎲 Tetris Pieces & Statistics
 
-The game features all 7 standard Tetris pieces:
-- **I-piece** (Cyan): Long straight line
-- **O-piece** (Yellow): 2x2 square
-- **T-piece** (Purple): T-shaped
-- **S-piece** (Green): S-shaped
-- **Z-piece** (Red): Z-shaped
-- **J-piece** (Blue): J-shaped
-- **L-piece** (Orange): L-shaped
+The game features all 7 standard Tetris pieces with real-time statistics tracking:
+- **I-piece** (Red): Long straight line - 4 blocks horizontal
+- **O-piece** (Green): 2x2 square
+- **T-piece** (Blue): T-shaped - 3 blocks with center extension
+- **S-piece** (Yellow): S-shaped - offset horizontal blocks
+- **Z-piece** (Magenta): Z-shaped - offset horizontal blocks (opposite of S)
+- **J-piece** (Cyan): J-shaped - L-shape rotated
+- **L-piece** (Orange): L-shaped - corner piece
+
+### 📊 Live Statistics Panel
+The left side of the game displays a comprehensive statistics panel that shows:
+- **Piece Graphics**: Mini-canvas renderings of each Tetris piece using the exact same colors and shapes as in the game
+- **Usage Count**: How many times each piece has been used in the current stage
+- **Percentage Distribution**: Real-time calculation of piece distribution percentages
+- **Visual Tracking**: Statistics reset at the start of each new stage
 
 ## 📈 Scoring System
 
@@ -125,15 +151,20 @@ The game features all 7 standard Tetris pieces:
 - **Achievement System**: Track your accomplishments
 - **Responsive Design**: Works on desktop and mobile devices
 - **Sound Effects**: Dynamic audio feedback for all game actions (can be toggled on/off)
+- **Live Statistics**: Real-time piece usage tracking with authentic Tetris piece graphics
+- **Canvas-based Graphics**: Mini-canvas elements display exact replicas of game pieces
+- **Real-time Updates**: Statistics, timer, and progress indicators update continuously
+- **Interactive Controls**: Intuitive button layout with transparent design
 
 ## 🔊 Sound System
 
 The game includes comprehensive sound effects:
-- **Movement Sounds**: Piece movement, rotation, and dropping
-- **Line Clear Effects**: Different sounds for single lines vs. Tetris (4 lines)
+- **Movement Sounds**: Piece movement, rotation, and dropping (including soft drop)
+- **Line Clear Effects**: Different sounds for single lines vs. Tetris (4 lines) with explosive audio
 - **Power-up Audio**: Unique sounds for each power-up activation
 - **Stage Progression**: Victory fanfares and completion sounds
 - **Character Actions**: Audio feedback for character animations
+- **Web Audio API**: Dynamic sound generation for consistent audio experience
 - **Toggle Control**: Sound can be enabled/disabled via the 🔊/🔇 button
 
 ## 🚀 Getting Started

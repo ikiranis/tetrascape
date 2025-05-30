@@ -537,18 +537,17 @@ class TetrisGame {
         const statsGrid = document.getElementById('stats-grid');
         if (!statsGrid) return;
         
-        const pieceIcons = {
-            I: '🟦', O: '🟨', T: '🟪', S: '🟩', Z: '🟥', J: '🟫', L: '🟧'
-        };
-        
         let html = '';
         Object.keys(this.pieceStats).forEach(piece => {
             const count = this.pieceStats[piece];
             const percentage = this.totalPieces > 0 ? ((count / this.totalPieces) * 100).toFixed(1) : '0.0';
             
+            // Create unique canvas ID for each piece
+            const canvasId = `piece-canvas-${piece}`;
+            
             html += `
                 <div class="stat-item">
-                    <span class="piece-icon">${pieceIcons[piece]}</span>
+                    <canvas id="${canvasId}" class="piece-canvas" width="60" height="60"></canvas>
                     <div class="stat-numbers">
                         <div class="stat-count">${count}</div>
                         <div class="stat-percent">${percentage}%</div>
@@ -558,6 +557,55 @@ class TetrisGame {
         });
         
         statsGrid.innerHTML = html;
+        
+        // Draw each piece on its canvas after DOM update
+        requestAnimationFrame(() => {
+            Object.keys(this.pieceStats).forEach(piece => {
+                this.drawPieceOnCanvas(`piece-canvas-${piece}`, piece);
+            });
+        });
+    }
+    
+    drawPieceOnCanvas(canvasId, pieceType) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return;
+        
+        const ctx = canvas.getContext('2d');
+        const pieceData = this.pieces[pieceType];
+        if (!pieceData) return;
+        
+        // Clear canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Calculate block size to fit the piece in the canvas
+        const shape = pieceData.shape;
+        const rows = shape.length;
+        const cols = shape[0].length;
+        const maxSize = Math.min(canvas.width / cols, canvas.height / rows);
+        const blockSize = Math.floor(maxSize * 0.8); // Leave some padding
+        
+        // Calculate centering offset
+        const offsetX = (canvas.width - (cols * blockSize)) / 2;
+        const offsetY = (canvas.height - (rows * blockSize)) / 2;
+        
+        // Draw the piece
+        for (let row = 0; row < rows; row++) {
+            for (let col = 0; col < cols; col++) {
+                if (shape[row][col] !== 0) {
+                    const x = offsetX + col * blockSize;
+                    const y = offsetY + row * blockSize;
+                    
+                    // Draw block with the same color as in the game
+                    ctx.fillStyle = this.colors[pieceData.color];
+                    ctx.fillRect(x, y, blockSize, blockSize);
+                    
+                    // Draw border for better visibility
+                    ctx.strokeStyle = '#ffffff';
+                    ctx.lineWidth = 1;
+                    ctx.strokeRect(x, y, blockSize, blockSize);
+                }
+            }
+        }
     }
     
     usePowerup(type) {
