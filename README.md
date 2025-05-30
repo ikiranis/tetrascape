@@ -2,6 +2,9 @@
 
 Welcome to **Tetrascape**, a unique twist on the classic Tetris game that transforms into an exciting escape-puzzle adventure! Complete stage objectives to help your character escape through increasingly challenging levels.
 
+![30-05--2025_23-29](https://github.com/user-attachments/assets/3131b7d6-6472-4950-9ed7-935e468bd7be)
+
+
 ## 🎯 Game Overview
 
 Tetrascape combines traditional Tetris mechanics with escape-game elements. Your goal is not just to clear lines, but to achieve specific objectives within time and block limits to progress through 5 challenging stages. Watch your character move along the escape track below the game board as you make progress toward your goals!
