@@ -1,8 +1,8 @@
-import SoundManager from './sound-manager.js';
-import PowerUpLogic from './powerup-logic.js';
+import SoundManager from './SoundManager.js';
+import PowerUpLogic from './PowerUpLogic.js';
 
-// Tetris Game Implementation
-class TetrisGame {
+// Tetrascape Game Implementation
+class TetrascapeGame {
     constructor() {
         this.canvas = document.getElementById('tetris-canvas');
         this.ctx = this.canvas.getContext('2d');
@@ -1209,7 +1209,7 @@ class TetrisGame {
     }
 }
 
-export default TetrisGame;
+export default TetrascapeGame;
 
 // Global instance (if needed, or handle instantiation in main.js)
-// window.tetrisGame = new TetrisGame();
+// window.tetrisGame = new TetrascapeGame();
