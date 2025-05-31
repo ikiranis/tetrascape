@@ -1030,6 +1030,21 @@ class TetrascapeGame {
             }, 200); // Slight delay after the completion sound
         }
         
+        // Add time bonus for line clears
+        if (linesCleared > 0) {
+            let timeBonus = linesCleared * 2; // 2 seconds per line
+            
+            // Double bonus for Tetris (4+ lines)
+            if (linesCleared >= 4) {
+                timeBonus *= 2; // 2 sec * 4 lines * 2 = 16 seconds
+            }
+            
+            this.timeLimit += timeBonus;
+            
+            // Update timer display to reflect the added time
+            this.updateTimerDisplay();
+        }
+        
         // Increase level every 10 lines
         if (this.lines >= this.level * 10) {
             this.level++;

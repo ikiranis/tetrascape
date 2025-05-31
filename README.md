@@ -131,7 +131,7 @@ The left side of the game displays a comprehensive statistics panel that shows:
 - **Percentage Distribution**: Real-time calculation of piece distribution percentages
 - **Visual Tracking**: Statistics reset at the start of each new stage
 
-## 📈 Scoring System
+## 📈 Enhanced Scoring System
 
 - **Single line**: 100 points
 - **Double lines**: 300 points
@@ -139,6 +139,25 @@ The left side of the game displays a comprehensive statistics panel that shows:
 - **Tetris (4 lines)**: 800 points
 - **Soft drop**: 1 point per cell
 - **Hard drop**: 2 points per cell
+- **⏰ Time Bonus**: +2 seconds per line cleared (Tetris earns +8 seconds, doubled to +16 seconds total)
+- **🎬 Visual Effects**: Individual block animations when lines are cleared
+- **🔊 Audio Feedback**: Realistic bubble pop sounds for each cleared block
+
+## 🆕 Recent Enhancements
+
+### 🎬 Visual & Audio Improvements (Latest Update)
+- **Block Pop Animations**: Individual blocks now scale, rotate, fade, and change colors when lines are cleared
+- **Realistic Sound Effects**: Added bubble pop synthesis for individual blocks plus falling/crash sounds
+- **Enhanced Line Clearing**: Fixed critical bug in gravity simulation - blocks now properly drop after line clears
+- **Time Bonus System**: Earn extra time for efficient play - 2 seconds per line cleared, doubled for Tetris
+- **Code Optimization**: Renamed classes and files for better organization (TetrascapeGame, SoundManager, PowerUpLogic)
+
+### 🔧 Technical Improvements
+- **Improved Gravity Physics**: Fixed multi-line clear bugs where remaining blocks didn't drop correctly
+- **Audio System Overhaul**: Added `playBlockPop()`, `playFalling()`, and `playCrash()` methods with Web Audio API synthesis
+- **Animation System**: CSS `@keyframes blockPop` with scaling, rotation, and color transitions
+- **Performance Optimization**: Better block manipulation algorithms for smoother gameplay
+- **File Structure**: Consistent PascalCase naming convention for all class files
 
 ## 💡 Strategy Tips
 
@@ -149,28 +168,35 @@ The left side of the game displays a comprehensive statistics panel that shows:
 5. **Store Planning**: Budget wisely for power-ups in later stages
 6. **Emergency Tactics**: Use shovel to clear dangerous column buildups
 
-## 🎨 Features
+## 🎨 Enhanced Features
 
 - **Modern UI**: Glassmorphism design with smooth animations
+- **🎬 Visual Block Animations**: Individual blocks scale, rotate, and fade with color transitions when lines are cleared
+- **💫 Block Pop Effects**: CSS animations create satisfying visual feedback for each cleared block
 - **Visual Feedback**: Character animations respond to your actions
 - **Progressive Difficulty**: Each stage increases the challenge
 - **Achievement System**: Track your accomplishments
 - **Responsive Design**: Works on desktop and mobile devices
-- **Sound Effects**: Dynamic audio feedback for all game actions (can be toggled on/off)
+- **⏱️ Time Bonus System**: Earn +2 seconds per line cleared (doubled for Tetris clears = 16 seconds total)
+- **🎯 Enhanced Line Clearing**: Improved gravity simulation ensures proper block dropping after line clears
+- **🔊 Enhanced Audio**: Realistic bubble pop synthesis and falling/crash sound effects
 - **Live Statistics**: Real-time piece usage tracking with authentic Tetris piece graphics
 - **Canvas-based Graphics**: Mini-canvas elements display exact replicas of game pieces
 - **Real-time Updates**: Statistics, timer, and progress indicators update continuously
 - **Interactive Controls**: Intuitive button layout with transparent design
 
-## 🔊 Sound System
+## 🔊 Enhanced Sound System
 
-The game includes comprehensive sound effects:
+The game features a comprehensive audio experience with realistic sound synthesis:
 - **Movement Sounds**: Piece movement, rotation, and dropping (including soft drop)
 - **Line Clear Effects**: Different sounds for single lines vs. Tetris (4 lines) with explosive audio
+- **🫧 Block Pop Effects**: Individual blocks create realistic bubble pop sounds when lines are cleared
+- **🎯 Falling Sounds**: Blocks make falling/whoosh sounds when dropping after line clears
+- **💥 Crash Effects**: Impact sounds when blocks land after gravity simulation
 - **Power-up Audio**: Unique sounds for each power-up activation
 - **Stage Progression**: Victory fanfares and completion sounds
 - **Character Actions**: Audio feedback for character animations
-- **Web Audio API**: Dynamic sound generation for consistent audio experience
+- **Web Audio API**: Dynamic sound generation with oscillators and filters for consistent audio experience
 - **Toggle Control**: Sound can be enabled/disabled via the 🔊/🔇 button
 
 ## 🚀 Getting Started
