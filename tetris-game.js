@@ -28,11 +28,11 @@ class TetrisGame {
         this.gamePaused = false;
         
         // Escape Game Features
-        this.currentStage = 1;
+        this.currentLevel = 1;
         this.totalMoney = 0;
-        this.stageGoals = {};
+        this.levelGoals = {};
         this.timeLimit = 0;
-        this.stageStartTime = 0;
+        this.levelStartTime = 0;
         this.maxBlocks = 0;
         this.blocksUsed = 0;
         this.stageCompleted = false;
@@ -121,7 +121,7 @@ class TetrisGame {
         }
     }
     
-    generateStageGoals() {
+    generateLevelGoals() {
         const stages = [
             { minScore: 500, timeLimit: 180, maxBlocks: 50, reward: 100 },
             { minScore: 1000, timeLimit: 150, maxBlocks: 45, reward: 150 },
@@ -130,10 +130,10 @@ class TetrisGame {
             { minScore: 4000, timeLimit: 105, maxBlocks: 30, reward: 500 }
         ];
         
-        const stageIndex = Math.min(this.currentStage - 1, stages.length - 1);
+        const stageIndex = Math.min(this.currentLevel - 1, stages.length - 1);
         const stage = stages[stageIndex];
         
-        this.stageGoals = {
+        this.levelGoals = {
             minScore: stage.minScore,
             timeLimit: stage.timeLimit,
             maxBlocks: stage.maxBlocks,
@@ -143,16 +143,16 @@ class TetrisGame {
         this.timeLimit = stage.timeLimit;
         this.maxBlocks = stage.maxBlocks;
         this.blocksUsed = 0;
-        this.stageStartTime = Date.now();
+        this.levelStartTime = Date.now();
     }
     
     checkStageCompletion() {
         if (this.stageCompleted) return;
         
-        const timeElapsed = Math.floor((Date.now() - this.stageStartTime) / 1000);
+        const timeElapsed = Math.floor((Date.now() - this.levelStartTime) / 1000);
         const timeRemaining = this.timeLimit - timeElapsed;
         
-        if (this.score >= this.stageGoals.minScore && timeRemaining > 0) {
+        if (this.score >= this.levelGoals.minScore && timeRemaining > 0) {
             this.completeStage();
         } else if (timeRemaining <= 0 || this.blocksUsed >= this.maxBlocks) {
             this.failStage();
@@ -174,9 +174,9 @@ class TetrisGame {
         }
         
         // Calculate bonus money
-        const timeBonus = Math.max(0, this.timeLimit - Math.floor((Date.now() - this.stageStartTime) / 1000)) * 10;
+        const timeBonus = Math.max(0, this.timeLimit - Math.floor((Date.now() - this.levelStartTime) / 1000)) * 10;
         const blockBonus = Math.max(0, this.maxBlocks - this.blocksUsed) * 5;
-        const totalEarned = this.stageGoals.reward + timeBonus + blockBonus;
+        const totalEarned = this.levelGoals.reward + timeBonus + blockBonus;
         
         this.totalMoney += totalEarned;
         
@@ -208,11 +208,11 @@ class TetrisGame {
         storeModal.className = 'store-modal';
         storeModal.innerHTML = `
             <div class="store-content">
-                <h2>🎉 Level ${this.currentStage} Complete! 🎉</h2>
+                <h2>🎉 Level ${this.currentLevel} Complete! 🎉</h2>
                 <div class="completion-stats">
                     <p>💰 Earned: <span class="earned-money">+${earnedMoney}</span> money</p>
                     <p>💳 Total money: <span class="total-money">${this.totalMoney}</span></p>
-                    <p>⏱️ Time: ${this.timeLimit - Math.floor((Date.now() - this.stageStartTime) / 1000)}s remaining</p>
+                    <p>⏱️ Time: ${this.timeLimit - Math.floor((Date.now() - this.levelStartTime) / 1000)}s remaining</p>
                     <p>🧱 Blocks: ${this.maxBlocks - this.blocksUsed} saved</p>
                 </div>
                 
@@ -262,7 +262,7 @@ class TetrisGame {
                 
                 <div class="store-actions">
                     <button class="next-level-btn" onclick="tetrisGame.nextStage()">
-                        ${this.currentStage >= 5 ? '🏆 Game End' : '➡️ Next Level'}
+                        ${this.currentLevel >= 5 ? '🏆 Game End' : '➡️ Next Level'}
                     </button>
                 </div>
             </div>
@@ -319,11 +319,11 @@ class TetrisGame {
     nextStage() {
         document.getElementById('store-modal').remove();
         
-        if (this.currentStage >= 5) {
+        if (this.currentLevel >= 5) {
             // Game completed!
             this.showGameComplete();
         } else {
-            this.currentStage++;
+            this.currentLevel++;
             this.startGame();
         }
     }
@@ -501,10 +501,10 @@ class TetrisGame {
     }
         
     updateCharacterProgress() {
-        if (!this.stageGoals.minScore) return;
+        if (!this.levelGoals.minScore) return;
         
         // Calculate progress based on score relative to goal
-        this.characterProgress = Math.min(100, (this.score / this.stageGoals.minScore) * 100);
+        this.characterProgress = Math.min(100, (this.score / this.levelGoals.minScore) * 100);
         
         // Update character position (move from left to right)
         const maxDistance = 256; // Width of character area minus character width
@@ -627,7 +627,7 @@ class TetrisGame {
         this.totalPieces = 0;
         
         // Reset inventory for stage 1 only
-        if (this.currentStage === 1) {
+        if (this.currentLevel === 1) {
             this.inventory = {
                 dynamite: 5,
                 shovel: 5,
@@ -637,7 +637,7 @@ class TetrisGame {
         }
         
         // Generate stage goals
-        this.generateStageGoals();
+        this.generateLevelGoals();
         
         // Start timer interval for live time updates
         this.startTimerInterval();
@@ -1010,16 +1010,16 @@ class TetrisGame {
     
     updateDisplay() {
         document.getElementById('score').textContent = this.score;
-        document.getElementById('level').textContent = this.currentStage;
+        document.getElementById('level').textContent = this.currentLevel;
         document.getElementById('lines').textContent = this.lines;
         const stageElement = document.getElementById('stage');
         if (stageElement) {
-            stageElement.textContent = this.currentStage;
+            stageElement.textContent = this.currentLevel;
         }
         document.getElementById('money').textContent = this.totalMoney;
         
         // Update stage goals display
-        document.getElementById('goal-score').textContent = this.stageGoals.minScore || '-';
+        document.getElementById('goal-score').textContent = this.levelGoals.minScore || '-';
         document.getElementById('goal-blocks').textContent = this.maxBlocks || '-';
         document.getElementById('blocks-used').textContent = this.blocksUsed;
         
@@ -1035,7 +1035,7 @@ class TetrisGame {
             return;
         }
         
-        const timeElapsed = Math.floor((Date.now() - this.stageStartTime) / 1000);
+        const timeElapsed = Math.floor((Date.now() - this.levelStartTime) / 1000);
         let timeRemaining = this.timeLimit - timeElapsed;
         
         if (timeRemaining < 0) timeRemaining = 0;

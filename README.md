@@ -1,6 +1,6 @@
 # 🎮 Tetrascape - Escape Puzzle Tetris
 
-Welcome to **Tetrascape**, a unique twist on the classic Tetris game that transforms into an exciting escape-puzzle adventure! Complete stage objectives to help your character escape through increasingly challenging levels.
+Welcome to **Tetrascape**, a unique twist on the classic Tetris game that transforms into an exciting escape-puzzle adventure! Complete level objectives to help your character escape through increasingly challenging levels.
 
 ## 🎮 Play Online
 **[🕹️ Play Tetrascape Now!](https://tetrascape.apps4net.eu)**
@@ -66,7 +66,7 @@ Each power-up triggers unique character animations:
 
 ## 🎖️ Stage Progression
 
-### Stage Objectives
+### Level Objectives
 Each stage has three requirements that must be met within the limits:
 
 | Stage | Score Target | Time Limit | Block Limit | Reward Money |
