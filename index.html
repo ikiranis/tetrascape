@@ -7,29 +7,38 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Control Buttons - Outside main container -->
+    <div class="control-buttons">
+        <button id="start-button" class="control-btn" title="Start Game">▶️</button>
+        <button id="pause-button" class="control-btn" disabled title="Pause">⏸️</button>
+        <button id="restart-button" class="control-btn" disabled title="Restart">🔄</button>
+        <button id="sound-toggle" class="control-btn sound-button" title="Toggle Sound">🔊</button>
+    </div>
+
     <div class="game-container">
         <div class="game-header">
             <h1>Tetrascape</h1>
-            <div class="score-panel">
-                <div class="score">
-                    <span>Score:</span>
-                    <span id="score">0</span>
-                </div>
-                <div class="level">
-                    <span>Level:</span>
-                    <span id="level">1</span>
-                </div>
-                <div class="timer">
-                    <span>Time:</span>
-                    <span id="time-remaining">00:00</span>
-                </div>
-                <div class="timer-progress-bar-container">
-                    <div id="time-progress" style="width: 100%; background-color: green; height: 10px;"></div>
-                </div>
-                <div class="lines">
-                    <span>Lines:</span>
-                    <span id="lines">0</span>
-                </div>
+        </div>
+        
+        <div class="score-panel">
+            <div class="score">
+                <span>Score:</span>
+                <span id="score">0</span>
+            </div>
+            <div class="level">
+                <span>Level:</span>
+                <span id="level">1</span>
+            </div>
+            <div class="timer">
+                <span>Time:</span>
+                <span id="time-remaining">00:00</span>
+            </div>
+            <div class="timer-progress-bar-container">
+                <div id="time-progress" style="width: 100%; background-color: green; height: 10px;"></div>
+            </div>
+            <div class="lines">
+                <span>Lines:</span>
+                <span id="lines">0</span>
             </div>
         </div>
         
@@ -54,13 +63,6 @@
             </div>
             
             <div class="side-panel">
-                <!-- Control Buttons - Right Side -->
-                <div class="control-buttons">
-                    <button id="start-button" class="control-btn" title="Start Game">▶️</button>
-                    <button id="pause-button" class="control-btn" disabled title="Pause">⏸️</button>
-                    <button id="restart-button" class="control-btn" disabled title="Restart">🔄</button>
-                    <button id="sound-toggle" class="control-btn sound-button" title="Toggle Sound">🔊</button>
-                </div>
                 <div class="stage-info" id="stage-info">
                     <h3>Level Objectives</h3>
                     <p>Target Score: <span id="goal-score">500</span></p>
