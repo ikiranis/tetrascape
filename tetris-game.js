@@ -1006,11 +1006,14 @@ class TetrisGame {
         // Replace the board with the new one
         this.board = newBoard;
 
-        // Play crash sound when lines above fall down
+        // Play falling sound when lines above start falling down
         if (linesCleared > 0) {
+            this.soundManager.playFalling();
+            
+            // Play crash sound after falling sound completes
             setTimeout(() => {
                 this.soundManager.playCrash();
-            }, 100); // Small delay to represent the falling motion
+            }, 600); // Duration of falling sound
         }
         
         // Update game state

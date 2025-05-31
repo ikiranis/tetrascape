@@ -247,6 +247,37 @@ class SoundManager {
         this.playTone(150, 0.3, 'sawtooth', 0.1);
     }
 
+    playFalling() {
+        // Falling sound - descending whoosh when blocks fall down
+        const startFreq = 300;
+        const endFreq = 80;
+        const duration = 0.6;
+        
+        if (!this.enabled || !this.audioContext) return;
+        
+        const oscillator = this.audioContext.createOscillator();
+        const gainNode = this.audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(this.audioContext.destination);
+        
+        // Use sawtooth for a whooshing effect
+        oscillator.type = 'sawtooth';
+        
+        // Descending frequency sweep (falling effect)
+        oscillator.frequency.setValueAtTime(startFreq, this.audioContext.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(endFreq, this.audioContext.currentTime + duration);
+        
+        // Gradual fade in and out
+        gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+        gainNode.gain.linearRampToValueAtTime(0.06, this.audioContext.currentTime + 0.1);
+        gainNode.gain.linearRampToValueAtTime(0.06, this.audioContext.currentTime + duration - 0.1);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + duration);
+        
+        oscillator.start(this.audioContext.currentTime);
+        oscillator.stop(this.audioContext.currentTime + duration);
+    }
+
     playCrash() {
         // Crash sound when lines above fall down after block pops
         // Deep rumbling crash with multiple frequency components
