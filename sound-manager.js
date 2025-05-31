@@ -66,6 +66,27 @@ class SoundManager {
         setTimeout(() => this.playTone(600, 0.15, 'sine', 0.1), 100);
         setTimeout(() => this.playTone(700, 0.2, 'sine', 0.1), 150);
     }
+
+    playLineClearStart() {
+        // Sound that plays at the beginning of line clear sequence
+        this.playTone(500, 0.1, 'square', 0.08);
+    }
+
+    playLineClearComplete() {
+        // Sound that plays when all blocks in lines have popped
+        setTimeout(() => this.playTone(400, 0.15, 'sine', 0.1), 0);
+        setTimeout(() => this.playTone(500, 0.15, 'sine', 0.1), 50);
+        setTimeout(() => this.playTone(600, 0.15, 'sine', 0.1), 100);
+        setTimeout(() => this.playTone(700, 0.2, 'sine', 0.1), 150);
+    }
+
+    playBlockPop() {
+        // Individual block pop sound - short and satisfying
+        const frequency = 300 + Math.random() * 200; // Randomize frequency slightly
+        this.playTone(frequency, 0.08, 'triangle', 0.06);
+        // Add a subtle higher harmonic for sparkle
+        setTimeout(() => this.playTone(frequency * 1.5, 0.05, 'sine', 0.03), 10);
+    }
     
     playTetris() {
         // Special tetris sound - more explosive and elaborate
@@ -99,8 +120,8 @@ class SoundManager {
     playExplosion() {
         // Explosion sound for dynamite
         this.playTone(50, 0.3, 'sawtooth', 0.15);
-        setTimeout(() => this.playTone(80, 0.2, 'square', 0.12), 50);
-        setTimeout(() => this.playTone(40, 0.4, 'sawtooth', 0.1), 100);
+        setTimeout(() => this.playTone(80, 0.2, 'square', 0.12), 100);
+        setTimeout(() => this.playTone(120, 0.15, 'triangle', 0.08), 200);
     }
     
     playDig() {
@@ -128,6 +149,67 @@ class SoundManager {
                 setTimeout(() => this.playTone(1200 + Math.random() * 400, 0.1, 'triangle', 0.03), i * 50);
             }
         }, 500);
+    }
+
+    playBlockPop() {
+        // Bubble pop sound - quick pitch drop with resonant quality
+        const startFreq = 400 + Math.random() * 300; // Higher starting frequency
+        const endFreq = 150 + Math.random() * 100;   // Lower ending frequency
+        
+        if (!this.enabled || !this.audioContext) return;
+        
+        const oscillator = this.audioContext.createOscillator();
+        const gainNode = this.audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(this.audioContext.destination);
+        
+        // Use sine wave for smooth bubble-like tone
+        oscillator.type = 'sine';
+        
+        // Quick frequency sweep from high to low (bubble pop characteristic)
+        oscillator.frequency.setValueAtTime(startFreq, this.audioContext.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(endFreq, this.audioContext.currentTime + 0.1);
+        
+        // Quick attack and decay envelope
+        gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+        gainNode.gain.linearRampToValueAtTime(0.08, this.audioContext.currentTime + 0.01);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.12);
+        
+        oscillator.start(this.audioContext.currentTime);
+        oscillator.stop(this.audioContext.currentTime + 0.12);
+        
+        // Add a subtle "air release" sound for realism
+        setTimeout(() => {
+            const noiseOsc = this.audioContext.createOscillator();
+            const noiseGain = this.audioContext.createGain();
+            
+            noiseOsc.connect(noiseGain);
+            noiseGain.connect(this.audioContext.destination);
+            
+            noiseOsc.type = 'square';
+            noiseOsc.frequency.setValueAtTime(80 + Math.random() * 40, this.audioContext.currentTime);
+            
+            noiseGain.gain.setValueAtTime(0, this.audioContext.currentTime);
+            noiseGain.gain.linearRampToValueAtTime(0.02, this.audioContext.currentTime + 0.01);
+            noiseGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.06);
+            
+            noiseOsc.start(this.audioContext.currentTime);
+            noiseOsc.stop(this.audioContext.currentTime + 0.06);
+        }, 20);
+    }
+
+    playLineClearStart() {
+        // Sound that plays at the beginning of line clear sequence
+        this.playTone(500, 0.1, 'square', 0.08);
+    }
+
+    playLineClearComplete() {
+        // Sound that plays when all blocks in lines have popped
+        setTimeout(() => this.playTone(400, 0.15, 'sine', 0.1), 0);
+        setTimeout(() => this.playTone(500, 0.15, 'sine', 0.1), 50);
+        setTimeout(() => this.playTone(600, 0.15, 'sine', 0.1), 100);
+        setTimeout(() => this.playTone(700, 0.2, 'sine', 0.1), 150);
     }
     
     playStageComplete() {

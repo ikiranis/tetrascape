@@ -64,6 +64,9 @@ class TetrisGame {
         };
         this.totalPieces = 0;
         
+        // Animation state tracking
+        this.isAnimatingLineClear = false;
+        
         this.colors = [
             '#000000', // Empty
             '#ff0000', // I-piece (Red)
@@ -689,7 +692,7 @@ class TetrisGame {
     }
     
     gameLoop() {
-        if (!this.gameRunning || this.gamePaused) return;
+        if (!this.gameRunning || this.gamePaused || this.isAnimatingLineClear) return;
         
         const now = Date.now();
         
@@ -715,7 +718,7 @@ class TetrisGame {
     }
     
     handleKeyPress(e) {
-        if (!this.gameRunning || this.gamePaused) return;
+        if (!this.gameRunning || this.gamePaused || this.isAnimatingLineClear) return;
         
         switch(e.code) {
             case 'ArrowLeft':
@@ -885,35 +888,140 @@ class TetrisGame {
     }
     
     clearLines() {
-        let linesCleared = 0;
+        // Find completed lines
+        const completedLines = [];
         for (let r = this.BOARD_HEIGHT - 1; r >= 0; r--) {
             if (this.board[r].every(cell => cell !== 0)) {
-                linesCleared++;
-                this.board.splice(r, 1);
-                this.board.unshift(Array(this.BOARD_WIDTH).fill(0));
-                r++; // Re-check the current row index as it's now a new row
+                completedLines.push(r);
             }
         }
         
-        if (linesCleared > 0) {
-            this.lines += linesCleared;
-            if (linesCleared === 1) this.score += 100;
-            else if (linesCleared === 2) this.score += 300;
-            else if (linesCleared === 3) this.score += 500;
-            else if (linesCleared >= 4) this.score += 800; // Tetris
+        if (completedLines.length > 0) {
+            // Temporarily disable game input during animation
+            this.isAnimatingLineClear = true;
             
-            if (linesCleared >= 4) {
+            // Play initial line clear sound
+            this.soundManager.playLineClearStart();
+            
+            // Create block pop animations for each completed line
+            this.animateBlockPops(completedLines, () => {
+                // This callback runs after all blocks have popped
+                this.finalizeLinesClearing(completedLines);
+            });
+        }
+    }
+
+    animateBlockPops(completedLines, onComplete) {
+        const allBlocks = [];
+        
+        // Collect all blocks that need to pop from all completed lines
+        completedLines.forEach(row => {
+            for (let col = 0; col < this.BOARD_WIDTH; col++) {
+                if (this.board[row][col] !== 0) {
+                    allBlocks.push({
+                        row: row,
+                        col: col,
+                        color: this.board[row][col],
+                        originalColor: this.colors[this.board[row][col]]
+                    });
+                }
+            }
+        });
+
+        // Create animated blocks using DOM elements for CSS animations
+        const animatedBlocks = [];
+        allBlocks.forEach((block, index) => {
+            const blockElement = document.createElement('div');
+            blockElement.style.position = 'absolute';
+            blockElement.style.width = this.BLOCK_SIZE + 'px';
+            blockElement.style.height = this.BLOCK_SIZE + 'px';
+            blockElement.style.backgroundColor = block.originalColor;
+            blockElement.style.left = (block.col * this.BLOCK_SIZE) + 'px';
+            blockElement.style.top = (block.row * this.BLOCK_SIZE) + 'px';
+            blockElement.style.zIndex = '1000';
+            blockElement.style.pointerEvents = 'none';
+            blockElement.style.border = '1px solid rgba(255, 255, 255, 0.3)';
+            blockElement.style.borderRadius = '2px';
+            blockElement.style.boxShadow = '0 0 10px rgba(255, 255, 255, 0.2)';
+            blockElement.style.transition = 'background-color 0.1s ease';
+            
+            // Position relative to canvas
+            const canvasRect = this.canvas.getBoundingClientRect();
+            blockElement.style.position = 'fixed';
+            blockElement.style.left = (canvasRect.left + block.col * this.BLOCK_SIZE) + 'px';
+            blockElement.style.top = (canvasRect.top + block.row * this.BLOCK_SIZE) + 'px';
+            
+            document.body.appendChild(blockElement);
+            animatedBlocks.push(blockElement);
+            
+            // Schedule the pop animation with staggered timing
+            setTimeout(() => {
+                blockElement.classList.add('block-pop');
+                this.soundManager.playBlockPop();
+                
+                // Remove the block element after animation completes
+                setTimeout(() => {
+                    if (blockElement.parentNode) {
+                        blockElement.parentNode.removeChild(blockElement);
+                    }
+                }, 400); // Duration of pop animation
+                
+            }, index * 50); // Stagger each block by 50ms
+        });
+
+        // Remove blocks from the board immediately (they're now animated separately)
+        completedLines.forEach(row => {
+            for (let col = 0; col < this.BOARD_WIDTH; col++) {
+                this.board[row][col] = 0;
+            }
+        });
+
+        // Call the completion callback after all animations finish
+        const totalAnimationTime = allBlocks.length * 50 + 400; // Stagger time + animation duration
+        setTimeout(() => {
+            this.soundManager.playLineClearComplete();
+            onComplete();
+        }, totalAnimationTime);
+    }
+
+    finalizeLinesClearing(completedLines) {
+        const linesCleared = completedLines.length;
+        
+        // Remove the completed lines and add new empty lines at the top
+        completedLines.sort((a, b) => b - a); // Sort in descending order
+        completedLines.forEach(row => {
+            this.board.splice(row, 1);
+            this.board.unshift(Array(this.BOARD_WIDTH).fill(0));
+        });
+        
+        // Update game state
+        this.lines += linesCleared;
+        if (linesCleared === 1) this.score += 100;
+        else if (linesCleared === 2) this.score += 300;
+        else if (linesCleared === 3) this.score += 500;
+        else if (linesCleared >= 4) this.score += 800; // Tetris
+        
+        // Play special Tetris sound for 4+ lines
+        if (linesCleared >= 4) {
+            setTimeout(() => {
                 this.soundManager.playTetris();
-            } else {
-                this.soundManager.playLineClear();
-            }
-            
-            // Increase level every 10 lines
-            if (this.lines >= this.level * 10) {
-                this.level++;
-                this.dropInterval = Math.max(100, 1000 - (this.level - 1) * 100);
-            }
-            this.updateDisplay(); // Added to ensure display updates after potential level change
+            }, 200); // Slight delay after the completion sound
+        }
+        
+        // Increase level every 10 lines
+        if (this.lines >= this.level * 10) {
+            this.level++;
+            this.dropInterval = Math.max(100, 1000 - (this.level - 1) * 100);
+        }
+        
+        // Re-enable game input
+        this.isAnimatingLineClear = false;
+        
+        this.updateDisplay();
+        
+        // Restart the game loop if it was paused due to animation
+        if (this.gameRunning && !this.gamePaused) {
+            this.gameLoop();
         }
     }
     
