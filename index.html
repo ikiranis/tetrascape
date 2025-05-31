@@ -19,6 +19,13 @@
                     <span>Level:</span>
                     <span id="level">1</span>
                 </div>
+                <div class="timer">
+                    <span>Time:</span>
+                    <span id="time-remaining">00:00</span>
+                </div>
+                <div class="timer-progress-bar-container">
+                    <div id="time-progress" style="width: 100%; background-color: green; height: 10px;"></div>
+                </div>
                 <div class="lines">
                     <span>Lines:</span>
                     <span id="lines">0</span>
@@ -56,11 +63,9 @@
                 </div>
                 <div class="stage-info" id="stage-info">
                     <h3>Stage Objectives</h3>
-                    <p>Level: 1</p>
-                    <p>Target: 500 points</p>
-                    <p>Time: 120s</p>
-                    <p>Blocks: 0/50</p>
-                    <p>Money: $0</p>
+                    <p>Target Score: <span id="goal-score">500</span></p>
+                    <p>Blocks Used: <span id="blocks-used">0</span>/<span id="goal-blocks">50</span></p>
+                    <p>Money: $<span id="money">0</span></p>
                 </div>
                 <div class="next-piece">
                     <h3>Next Piece</h3>
@@ -105,7 +110,6 @@
         </a>
     </div>
 
-    <script src="main.js"></script>
+    <script type="module" src="main.js"></script>
 </body>
-</html>
 </html>
