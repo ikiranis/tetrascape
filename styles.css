@@ -8,35 +8,35 @@
 }
 
 :root {
-    /* Material Design Color Palette */
-    --primary: #1976d2;
-    --primary-dark: #1565c0;
-    --primary-light: #42a5f5;
+    /* Material Design Dark Theme Color Palette */
+    --primary: #bb86fc;
+    --primary-dark: #9965f4;
+    --primary-light: #d0bcff;
     --secondary: #03dac6;
-    --secondary-dark: #018786;
-    --accent: #ff4081;
-    --background: #fafafa;
-    --surface: #ffffff;
-    --surface-variant: #f5f5f5;
-    --on-primary: #ffffff;
+    --secondary-dark: #029688;
+    --accent: #cf6679;
+    --background: #121212;
+    --surface: #1e1e1e;
+    --surface-variant: #2d2d2d;
+    --on-primary: #000000;
     --on-secondary: #000000;
-    --on-surface: #212121;
-    --on-surface-variant: #757575;
-    --outline: #e0e0e0;
-    --shadow: rgba(0, 0, 0, 0.2);
-    --shadow-light: rgba(0, 0, 0, 0.1);
+    --on-surface: #e1e1e1;
+    --on-surface-variant: #b3b3b3;
+    --outline: #3d3d3d;
+    --shadow: rgba(0, 0, 0, 0.4);
+    --shadow-light: rgba(0, 0, 0, 0.2);
     
-    /* Material Design Elevation Shadows */
-    --elevation-1: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-    --elevation-2: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-    --elevation-3: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
-    --elevation-4: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-    --elevation-5: 0 19px 38px rgba(0, 0, 0, 0.30), 0 15px 12px rgba(0, 0, 0, 0.22);
+    /* Material Design Dark Theme Elevation Shadows */
+    --elevation-1: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.6);
+    --elevation-2: 0 3px 6px rgba(0, 0, 0, 0.5), 0 3px 6px rgba(0, 0, 0, 0.7);
+    --elevation-3: 0 10px 20px rgba(0, 0, 0, 0.6), 0 6px 6px rgba(0, 0, 0, 0.7);
+    --elevation-4: 0 14px 28px rgba(0, 0, 0, 0.7), 0 10px 10px rgba(0, 0, 0, 0.8);
+    --elevation-5: 0 19px 38px rgba(0, 0, 0, 0.8), 0 15px 12px rgba(0, 0, 0, 0.9);
 }
 
 body {
     font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -396,7 +396,7 @@ button:disabled {
     opacity: 0.38;
     cursor: not-allowed;
     transform: none;
-    background: var(--outline);
+    background: var(--surface-variant);
     color: var(--on-surface-variant);
     box-shadow: none;
 }
@@ -407,7 +407,7 @@ button:active:not(:disabled) {
 }
 
 .sound-button.muted {
-    background: var(--outline);
+    background: var(--surface-variant);
     color: var(--on-surface-variant);
 }
 
@@ -625,7 +625,7 @@ button:active:not(:disabled) {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.8);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -688,7 +688,7 @@ button:active:not(:disabled) {
 }
 
 .total-money {
-    color: #f57c00;
+    color: #ffb74d;
     font-weight: 500;
 }
 
@@ -764,7 +764,7 @@ button:active:not(:disabled) {
 
 .item-price {
     font-size: 0.8rem;
-    color: #f57c00;
+    color: #ffb74d;
     font-weight: 500;
 }
 
@@ -800,7 +800,7 @@ button:active:not(:disabled) {
 }
 
 .store-item button:disabled {
-    background: var(--outline);
+    background: var(--surface-variant);
     color: var(--on-surface-variant);
     cursor: not-allowed;
     box-shadow: none;
@@ -842,7 +842,7 @@ button:active:not(:disabled) {
 }
 
 .achievements h3 {
-    color: #f57c00;
+    color: #ffb74d;
     margin-bottom: 16px;
     font-size: 1.125rem;
     font-weight: 500;
@@ -855,10 +855,10 @@ button:active:not(:disabled) {
 }
 
 .achievement {
-    background: #fff3e0;
+    background: #2d2d2d;
     padding: 12px 16px;
     border-radius: 8px;
-    border-left: 4px solid #f57c00;
+    border-left: 4px solid #ffb74d;
     color: var(--on-surface);
     font-size: 0.875rem;
     box-shadow: var(--elevation-1);
@@ -876,7 +876,7 @@ button:active:not(:disabled) {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.8);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -896,7 +896,7 @@ button:active:not(:disabled) {
 .game-over p {
     font-size: 1.25rem;
     margin-bottom: 32px;
-    color: var(--surface);
+    color: var(--on-surface);
     text-align: center;
 }
 
