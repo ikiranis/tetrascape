@@ -436,17 +436,8 @@ class TetrascapeGame {
         for (let row = 0; row < rows; row++) {
             for (let col = 0; col < cols; col++) {
                 if (shape[row][col] !== 0) {
-                    const x = offsetX + col * blockSize;
-                    const y = offsetY + row * blockSize;
-                    
-                    // Draw block with the same color as in the game
-                    ctx.fillStyle = this.colors[pieceData.color];
-                    ctx.fillRect(x, y, blockSize, blockSize);
-                    
-                    // Draw border for better visibility
-                    ctx.strokeStyle = '#ffffff';
-                    ctx.lineWidth = 1;
-                    ctx.strokeRect(x, y, blockSize, blockSize);
+                    // Use the same glossy drawBlock method for consistency
+                    this.drawBlock(ctx, col, row, this.colors[pieceData.color], blockSize, offsetX, offsetY, true);
                 }
             }
         }
@@ -1118,39 +1109,83 @@ class TetrascapeGame {
         const blockX = offsetX + x * blockSize;
         const blockY = offsetY + y * blockSize;
         
-        // Base color
-        context.fillStyle = color;
+        // Create glossy gradient background
+        const gradient = context.createLinearGradient(blockX, blockY, blockX, blockY + blockSize);
+        
+        // Parse the base color to create lighter and darker variants
+        const baseColor = color;
+        const colorMatch = baseColor.match(/^#([0-9a-f]{6})$/i);
+        let r = 255, g = 0, b = 0; // Default to red if parsing fails
+        
+        if (colorMatch) {
+            r = parseInt(colorMatch[1].substr(0, 2), 16);
+            g = parseInt(colorMatch[1].substr(2, 2), 16);
+            b = parseInt(colorMatch[1].substr(4, 2), 16);
+        }
+        
+        // Create glossy gradient with enhanced brightness at top
+        gradient.addColorStop(0, `rgba(${Math.min(255, r + 80)}, ${Math.min(255, g + 80)}, ${Math.min(255, b + 80)}, 1)`);
+        gradient.addColorStop(0.1, `rgba(${Math.min(255, r + 40)}, ${Math.min(255, g + 40)}, ${Math.min(255, b + 40)}, 1)`);
+        gradient.addColorStop(0.5, baseColor);
+        gradient.addColorStop(0.9, `rgba(${Math.max(0, r - 40)}, ${Math.max(0, g - 40)}, ${Math.max(0, b - 40)}, 1)`);
+        gradient.addColorStop(1, `rgba(${Math.max(0, r - 60)}, ${Math.max(0, g - 60)}, ${Math.max(0, b - 60)}, 1)`);
+        
+        // Fill base block with glossy gradient
+        context.fillStyle = gradient;
         context.fillRect(blockX, blockY, blockSize, blockSize);
         
-        // Glassmorphism highlights and shadows
-        // Inner lighter edge (top-left)
+        // Add subtle glossy highlight at top
+        const highlightGradient = context.createLinearGradient(blockX, blockY, blockX, blockY + blockSize * 0.25);
+        highlightGradient.addColorStop(0, 'rgba(255, 255, 255, 0.25)');
+        highlightGradient.addColorStop(0.5, 'rgba(255, 255, 255, 0.15)');
+        highlightGradient.addColorStop(1, 'rgba(255, 255, 255, 0.05)');
+        
+        context.fillStyle = highlightGradient;
+        context.fillRect(blockX, blockY, blockSize, blockSize * 0.25);
+        
+        // Add minimal shine stripe at the very top
+        const shineGradient = context.createLinearGradient(blockX, blockY, blockX, blockY + blockSize * 0.1);
+        shineGradient.addColorStop(0, 'rgba(255, 255, 255, 0.3)');
+        shineGradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        
+        context.fillStyle = shineGradient;
+        context.fillRect(blockX, blockY, blockSize, blockSize * 0.1);
+        
+        // Add subtle left-side glossy highlight
+        const leftGradient = context.createLinearGradient(blockX, blockY, blockX + blockSize * 0.15, blockY);
+        leftGradient.addColorStop(0, 'rgba(255, 255, 255, 0.2)');
+        leftGradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        
+        context.fillStyle = leftGradient;
+        context.fillRect(blockX, blockY, blockSize * 0.15, blockSize);
+        
+        // Add bottom shadow for depth
+        const shadowGradient = context.createLinearGradient(blockX, blockY + blockSize * 0.7, blockX, blockY + blockSize);
+        shadowGradient.addColorStop(0, 'rgba(0, 0, 0, 0)');
+        shadowGradient.addColorStop(1, 'rgba(0, 0, 0, 0.3)');
+        
+        context.fillStyle = shadowGradient;
+        context.fillRect(blockX, blockY + blockSize * 0.7, blockSize, blockSize * 0.3);
+        
+        // Add right-side shadow
+        const rightShadowGradient = context.createLinearGradient(blockX + blockSize * 0.8, blockY, blockX + blockSize, blockY);
+        rightShadowGradient.addColorStop(0, 'rgba(0, 0, 0, 0)');
+        rightShadowGradient.addColorStop(1, 'rgba(0, 0, 0, 0.2)');
+        
+        context.fillStyle = rightShadowGradient;
+        context.fillRect(blockX + blockSize * 0.8, blockY, blockSize * 0.2, blockSize);
+        
+        // Add very subtle corner highlights
         context.fillStyle = 'rgba(255, 255, 255, 0.3)';
-        context.beginPath();
-        context.moveTo(blockX, blockY);
-        context.lineTo(blockX + blockSize, blockY);
-        context.lineTo(blockX + blockSize - 2, blockY + 2);
-        context.lineTo(blockX + 2, blockY + 2);
-        context.lineTo(blockX + 2, blockY + blockSize -2);
-        context.lineTo(blockX, blockY + blockSize);
-        context.closePath();
-        context.fill();
+        context.fillRect(blockX + 1, blockY + 1, 2, 2); // Top-left corner
         
-        // Outer darker edge (bottom-right)
-        context.fillStyle = 'rgba(0, 0, 0, 0.2)';
-        context.beginPath();
-        context.moveTo(blockX + blockSize, blockY + blockSize);
-        context.lineTo(blockX, blockY + blockSize);
-        context.lineTo(blockX + 2, blockY + blockSize - 2);
-        context.lineTo(blockX + blockSize - 2, blockY + blockSize - 2);
-        context.lineTo(blockX + blockSize - 2, blockY + 2);
-        context.lineTo(blockX + blockSize, blockY);
-        context.closePath();
-        context.fill();
+        context.fillStyle = 'rgba(255, 255, 255, 0.2)';
+        context.fillRect(blockX + blockSize - 3, blockY + 1, 2, 2); // Top-right corner
         
-        // Border
-        context.strokeStyle = 'rgba(255, 255, 255, 0.1)'; // Subtle border
-        context.lineWidth = 1;
-        context.strokeRect(blockX, blockY, blockSize, blockSize);
+        // Minimal border - very subtle
+        context.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+        context.lineWidth = 0.5;
+        context.strokeRect(blockX + 0.5, blockY + 0.5, blockSize - 1, blockSize - 1);
     }
     
     updateDisplay() {
