@@ -246,6 +246,16 @@ class SoundManager {
         // Error/invalid action sound
         this.playTone(150, 0.3, 'sawtooth', 0.1);
     }
+
+    playCrash() {
+        // Crash sound when lines above fall down after block pops
+        // Deep rumbling crash with multiple frequency components
+        this.playTone(60, 0.4, 'sawtooth', 0.12);  // Deep bass rumble
+        setTimeout(() => this.playTone(45, 0.3, 'square', 0.1), 50);   // Lower frequency thud
+        setTimeout(() => this.playTone(80, 0.25, 'sawtooth', 0.08), 100); // Mid-range crash
+        setTimeout(() => this.playTone(120, 0.2, 'triangle', 0.06), 150); // Higher frequency settle
+        setTimeout(() => this.playTone(35, 0.15, 'square', 0.04), 200);   // Final low thump
+    }
 }
 
 export default SoundManager;

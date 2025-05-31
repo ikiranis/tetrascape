@@ -987,12 +987,31 @@ class TetrisGame {
     finalizeLinesClearing(completedLines) {
         const linesCleared = completedLines.length;
         
-        // Remove the completed lines and add new empty lines at the top
-        completedLines.sort((a, b) => b - a); // Sort in descending order
-        completedLines.forEach(row => {
-            this.board.splice(row, 1);
-            this.board.unshift(Array(this.BOARD_WIDTH).fill(0));
-        });
+        // Remove the completed lines properly to simulate gravity
+        completedLines.sort((a, b) => b - a); // Sort in descending order to remove from bottom up
+        
+        // Create a new board by filtering out completed lines
+        const newBoard = [];
+        for (let row = 0; row < this.BOARD_HEIGHT; row++) {
+            if (!completedLines.includes(row)) {
+                newBoard.push([...this.board[row]]); // Copy the row
+            }
+        }
+        
+        // Add empty lines at the top for the number of lines cleared
+        while (newBoard.length < this.BOARD_HEIGHT) {
+            newBoard.unshift(Array(this.BOARD_WIDTH).fill(0));
+        }
+        
+        // Replace the board with the new one
+        this.board = newBoard;
+
+        // Play crash sound when lines above fall down
+        if (linesCleared > 0) {
+            setTimeout(() => {
+                this.soundManager.playCrash();
+            }, 100); // Small delay to represent the falling motion
+        }
         
         // Update game state
         this.lines += linesCleared;
