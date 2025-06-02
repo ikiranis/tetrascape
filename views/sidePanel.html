@@ -1,0 +1,31 @@
+<div class="side-panel">
+    <div class="stage-info" id="stage-info">
+        <h3>Level Objectives</h3>
+        <p>Target Score: <span id="goal-score">{{goalScore}}</span></p>
+        <p>Blocks Used: <span id="blocks-used">{{blocksUsed}}</span>/<span id="goal-blocks">{{goalBlocks}}</span></p>
+        <p>Money: $<span id="money">{{money}}</span></p>
+    </div>
+    <div class="next-piece">
+        <h3>Next Piece</h3>
+        <canvas id="next-canvas" width="120" height="120"></canvas>
+    </div>
+    <div class="inventory" id="inventory">
+        <h4>Inventory:</h4>
+        <p>💣: <span id="dynamite-count">{{dynamiteCount}}</span></p>
+        <p>🔨: <span id="shovel-count">{{shovelCount}}</span></p>
+        <p>🔄: <span id="trade-count">{{tradeCount}}</span></p>
+        <p>⏰: <span id="slow-count">{{slowCount}}</span></p>
+    </div>
+    <div class="controls">
+        <h3>Controls</h3>
+        <p>← → Move</p>
+        <p>↓ Soft Drop</p>
+        <p>Space Rotate</p>
+        <p>Shift Hard Drop</p>
+        <p>1 💣 Dynamite</p>
+        <p>2 🔨 Shovel</p>
+        <p>3 🔄 Trade</p>
+        <p>4 ⏰ +Time</p>
+        <p>P Pause</p>
+    </div>
+</div>

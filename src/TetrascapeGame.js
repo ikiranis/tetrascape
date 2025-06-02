@@ -2,6 +2,7 @@ import SoundManager from './SoundManager.js';
 import PowerUpLogic from './PowerUpLogic.js';
 import ControlsManager from './ControlsManager.js';
 import StoreManager from './StoreManager.js';
+import UIManager from './UIManager.js';
 
 /**
  * TetrascapeGame - A Tetris-based escape room game
@@ -13,10 +14,11 @@ class TetrascapeGame {
      * Sets up canvas contexts, sound management, game state, and power-up systems
      */
     constructor() {
-        this.canvas = document.getElementById('tetris-canvas');
-        this.ctx = this.canvas.getContext('2d');
-        this.nextCanvas = document.getElementById('next-canvas');
-        this.nextCtx = this.nextCanvas.getContext('2d');
+        // Canvas elements will be initialized after UI loads
+        this.canvas = null;
+        this.ctx = null;
+        this.nextCanvas = null;
+        this.nextCtx = null;
         
         // Initialize sound manager
         this.soundManager = new SoundManager();
@@ -35,6 +37,7 @@ class TetrascapeGame {
         this.dropInterval = 1000; // milliseconds
         this.gameRunning = false;
         this.gamePaused = false;
+        this.isUIInitialized = false;
         
         // Escape Game Features
         this.currentLevel = 1;
@@ -53,8 +56,8 @@ class TetrascapeGame {
         this.pausedTime = 0; // Total time spent paused (in milliseconds)
         this.pauseStartTime = 0; // When current pause started
         
-        // Character system - no longer drawn on canvas
-        this.characterElement = document.getElementById('character');
+        // Character system - will be initialized after UI loads
+        this.characterElement = null;
         this.characterState = 'waiting'; // waiting, working, escaping
         this.characterProgress = 0; // 0-100% progress towards goal
         
@@ -102,12 +105,64 @@ class TetrascapeGame {
         };
         
         this.initBoard();
-        // Initialize PowerUpLogic
+        // Initialize PowerUpLogic (doesn't depend on DOM)
         this.powerUpLogic = new PowerUpLogic(this.soundManager, this.triggerPowerupAnimation.bind(this));
-        // Initialize ControlsManager
-        this.controlsManager = new ControlsManager(this);
-        // Initialize StoreManager
-        this.storeManager = new StoreManager(this);
+        // Initialize UIManager first
+        this.uiManager = new UIManager(this);
+        
+        // Note: initializeGameUI() will be called externally from main.js
+        // This ensures proper async handling of UI loading and DOM-dependent manager initialization
+    }
+    
+    /**
+     * Initialize the game UI components using UIManager
+     * Loads all template-based UI components asynchronously
+     */
+    async initializeGameUI() {
+        try {
+            await this.uiManager.initializeUI();
+            
+            // Initialize canvas elements after UI is loaded
+            this.initializeCanvasElements();
+            
+            // Initialize DOM-dependent managers after UI is loaded
+            this.controlsManager = new ControlsManager(this);
+            this.storeManager = new StoreManager(this);
+            
+            this.isUIInitialized = true;
+        } catch (error) {
+            // Fall back to basic functionality if UI fails to load
+            this.isUIInitialized = false;
+        }
+    }
+    
+    /**
+     * Initialize canvas elements after the UI templates have been loaded
+     */
+    initializeCanvasElements() {
+        this.canvas = document.getElementById('tetris-canvas');
+        this.nextCanvas = document.getElementById('next-canvas');
+        
+        if (this.canvas) {
+            this.ctx = this.canvas.getContext('2d');
+        }
+        
+        if (this.nextCanvas) {
+            this.nextCtx = this.nextCanvas.getContext('2d');
+        }
+        
+        // Initialize character element reference
+        this.characterElement = document.getElementById('character');
+    }
+    
+    /**
+     * Reinitialize canvas elements if they were destroyed by UI updates
+     * This ensures the next piece canvas context is always available
+     */
+    reinitializeCanvasIfNeeded() {
+        if (!this.nextCanvas || !this.nextCtx) {
+            this.initializeCanvasElements();
+        }
     }
     
     /**
@@ -247,6 +302,10 @@ class TetrascapeGame {
      * Shows current count of each power-up type in the inventory panel
      */
     updateInventoryDisplay() {
+        // Use UIManager for template-based updates
+        this.uiManager.updateSidePanel();
+        
+        // Legacy direct DOM update for compatibility (can be removed once fully migrated)
         const inventoryDiv = document.getElementById('inventory');
         if (inventoryDiv) {
             inventoryDiv.innerHTML = `
@@ -528,6 +587,11 @@ class TetrascapeGame {
      * Initializes all game state, generates goals, sets up UI, and begins game loop
      */
     startGame() {
+        // Safety check: ensure UI and canvas are initialized
+        if (!this.canvas || !this.ctx) {
+            return;
+        }
+        
         this.gameRunning = true;
         this.gamePaused = false;
         this.score = 0;
@@ -571,6 +635,9 @@ class TetrascapeGame {
         
         this.currentPiece = this.getRandomPiece();
         this.nextPiece = this.getRandomPiece();
+        
+        // Explicitly draw the initial state to show the next piece immediately
+        this.draw();
         
         document.getElementById('start-button').disabled = true;
         document.getElementById('pause-button').disabled = false;
@@ -884,7 +951,7 @@ class TetrascapeGame {
             blockElement.style.transition = 'background-color 0.1s ease';
             
             // Position relative to canvas
-            const canvasRect = this.canvas.getBoundingClientRect();
+            const canvasRect = this.canvas ? this.canvas.getBoundingClientRect() : { left: 0, top: 0 };
             blockElement.style.position = 'fixed';
             blockElement.style.left = (canvasRect.left + block.col * this.BLOCK_SIZE) + 'px';
             blockElement.style.top = (canvasRect.top + block.row * this.BLOCK_SIZE) + 'px';
@@ -1011,6 +1078,11 @@ class TetrascapeGame {
      * Called every frame during the game loop
      */
     draw() {
+        // Safety check: ensure canvas elements are initialized
+        if (!this.canvas || !this.ctx || !this.nextCanvas || !this.nextCtx) {
+            return;
+        }
+        
         // Clear main canvas
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.fillStyle = '#1a1a2e'; // Dark blue-purple background
@@ -1037,29 +1109,7 @@ class TetrascapeGame {
         }
         
         // Draw next piece on next canvas
-        this.nextCtx.clearRect(0, 0, this.nextCanvas.width, this.nextCanvas.height);
-        this.nextCtx.fillStyle = '#1a1a2e';
-        this.nextCtx.fillRect(0, 0, this.nextCanvas.width, this.nextCanvas.height);
-        
-        if (this.nextPiece) {
-            const piece = this.nextPiece;
-            const shape = piece.shape;
-            const color = this.colors[piece.color];
-            const blockSize = this.nextCanvas.width / 4; // Assuming next piece area is 4x4 blocks
-            
-            const pieceWidth = shape[0].length * blockSize;
-            const pieceHeight = shape.length * blockSize;
-            const offsetX = (this.nextCanvas.width - pieceWidth) / 2;
-            const offsetY = (this.nextCanvas.height - pieceHeight) / 2;
-            
-            for (let r = 0; r < shape.length; r++) {
-                for (let c = 0; c < shape[r].length; c++) {
-                    if (shape[r][c] !== 0) {
-                        this.drawBlock(this.nextCtx, c, r, color, blockSize, offsetX, offsetY, true);
-                    }
-                }
-            }
-        }
+        this.drawNextPiece();
     }
     
     /**
@@ -1162,19 +1212,34 @@ class TetrascapeGame {
      * Updates score, level, lines, money, goals, and timer displays
      */
     updateDisplay() {
-        document.getElementById('score').textContent = this.score;
-        document.getElementById('level').textContent = this.currentLevel;
-        document.getElementById('lines').textContent = this.lines;
+        // Use UIManager for coordinated updates
+        this.uiManager.updateUI();
+        
+        // Legacy direct DOM updates for compatibility (can be removed once fully migrated)
+        const scoreElement = document.getElementById('score');
+        if (scoreElement) scoreElement.textContent = this.score;
+        
+        const levelElement = document.getElementById('level');
+        if (levelElement) levelElement.textContent = this.currentLevel;
+        
+        const linesElement = document.getElementById('lines');
+        if (linesElement) linesElement.textContent = this.lines;
+        
         const stageElement = document.getElementById('stage');
-        if (stageElement) {
-            stageElement.textContent = this.currentLevel;
-        }
-        document.getElementById('money').textContent = this.totalMoney;
+        if (stageElement) stageElement.textContent = this.currentLevel;
+        
+        const moneyElement = document.getElementById('money');
+        if (moneyElement) moneyElement.textContent = this.totalMoney;
         
         // Update stage goals display
-        document.getElementById('goal-score').textContent = this.levelGoals.minScore || '-';
-        document.getElementById('goal-blocks').textContent = this.maxBlocks || '-';
-        document.getElementById('blocks-used').textContent = this.blocksUsed;
+        const goalScoreElement = document.getElementById('goal-score');
+        if (goalScoreElement) goalScoreElement.textContent = this.levelGoals.minScore || '-';
+        
+        const goalBlocksElement = document.getElementById('goal-blocks');
+        if (goalBlocksElement) goalBlocksElement.textContent = this.maxBlocks || '-';
+        
+        const blocksUsedElement = document.getElementById('blocks-used');
+        if (blocksUsedElement) blocksUsedElement.textContent = this.blocksUsed;
         
         this.updateInventoryDisplay();
         this.updateTimerDisplay(); // Ensure timer is updated with other display elements
@@ -1186,18 +1251,27 @@ class TetrascapeGame {
      * Handles display when game is paused or completed
      */
     updateTimerDisplay() {
+        // Use UIManager for coordinated timer updates
+        this.uiManager.updateScorePanel();
+        
+        // Legacy timer update for compatibility (can be removed once fully migrated)
         if (!this.gameRunning || this.stageCompleted) {
             // If timer is not active, ensure display is cleared or shows default
-            document.getElementById('time-remaining').textContent = '--:--';
-            document.getElementById('time-progress').style.width = '0%';
+            const timeElement = document.getElementById('time-remaining');
+            if (timeElement) timeElement.textContent = '--:--';
+            const progressElement = document.getElementById('time-progress');
+            if (progressElement) progressElement.style.width = '0%';
             return;
         }
         
         // Show "(PAUSED)" indicator when paused
         if (this.gamePaused) {
-            const currentDisplay = document.getElementById('time-remaining').textContent;
-            if (!currentDisplay.includes('(PAUSED)')) {
-                document.getElementById('time-remaining').textContent = currentDisplay + ' (PAUSED)';
+            const timeElement = document.getElementById('time-remaining');
+            if (timeElement) {
+                const currentDisplay = timeElement.textContent;
+                if (!currentDisplay.includes('(PAUSED)')) {
+                    timeElement.textContent = currentDisplay + ' (PAUSED)';
+                }
             }
             return;
         }
@@ -1210,8 +1284,11 @@ class TetrascapeGame {
         const minutes = Math.floor(timeRemaining / 60);
         const seconds = timeRemaining % 60;
         
-        document.getElementById('time-remaining').textContent = 
-            `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        const timeElement = document.getElementById('time-remaining');
+        if (timeElement) {
+            timeElement.textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
         
         // Update progress bar
         const progressPercentage = (timeRemaining / this.timeLimit) * 100;
@@ -1250,6 +1327,45 @@ class TetrascapeGame {
         if (this.timerInterval) {
             clearInterval(this.timerInterval);
             this.timerInterval = null;
+        }
+    }
+
+    /**
+     * Update only the next piece canvas display
+     * Useful for updating the next piece preview without redrawing the entire game board
+     */
+    drawNextPiece() {
+        // Safety check: ensure next canvas elements are initialized
+        if (!this.nextCanvas || !this.nextCtx) {
+            this.reinitializeCanvasIfNeeded();
+            if (!this.nextCanvas || !this.nextCtx) {
+                return;
+            }
+        }
+        
+        // Clear and draw background
+        this.nextCtx.clearRect(0, 0, this.nextCanvas.width, this.nextCanvas.height);
+        this.nextCtx.fillStyle = '#1a1a2e';
+        this.nextCtx.fillRect(0, 0, this.nextCanvas.width, this.nextCanvas.height);
+        
+        if (this.nextPiece) {
+            const piece = this.nextPiece;
+            const shape = piece.shape;
+            const color = this.colors[piece.color];
+            const blockSize = this.nextCanvas.width / 4; // Assuming next piece area is 4x4 blocks
+            
+            const pieceWidth = shape[0].length * blockSize;
+            const pieceHeight = shape.length * blockSize;
+            const offsetX = (this.nextCanvas.width - pieceWidth) / 2;
+            const offsetY = (this.nextCanvas.height - pieceHeight) / 2;
+            
+            for (let r = 0; r < shape.length; r++) {
+                for (let c = 0; c < shape[r].length; c++) {
+                    if (shape[r][c] !== 0) {
+                        this.drawBlock(this.nextCtx, c, r, color, blockSize, offsetX, offsetY, true);
+                    }
+                }
+            }
         }
     }
 }
