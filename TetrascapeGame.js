@@ -1,5 +1,6 @@
 import SoundManager from './SoundManager.js';
 import PowerUpLogic from './PowerUpLogic.js';
+import ControlsManager from './ControlsManager.js';
 
 /**
  * TetrascapeGame - A Tetris-based escape room game
@@ -96,10 +97,10 @@ class TetrascapeGame {
         };
         
         this.initBoard();
-        this.setupEventListeners();
-        this.setupControls();
         // Initialize PowerUpLogic
         this.powerUpLogic = new PowerUpLogic(this.soundManager, this.triggerPowerupAnimation.bind(this));
+        // Initialize ControlsManager
+        this.controlsManager = new ControlsManager(this);
     }
     
     /**
@@ -108,43 +109,6 @@ class TetrascapeGame {
      */
     initBoard() {
         this.board = Array(this.BOARD_HEIGHT).fill().map(() => Array(this.BOARD_WIDTH).fill(0));
-    }
-    
-    /**
-     * Set up keyboard event listeners for game controls
-     * Binds keydown events to the handleKeyPress method
-     */
-    setupEventListeners() {
-        document.addEventListener('keydown', (e) => this.handleKeyPress(e));
-    }
-    
-    /**
-     * Set up click event listeners for UI buttons
-     * Binds start, pause, restart, and sound toggle buttons to their respective methods
-     */
-    setupControls() {
-        document.getElementById('start-button').addEventListener('click', () => this.startGame());
-        document.getElementById('pause-button').addEventListener('click', () => this.togglePause());
-        document.getElementById('restart-button').addEventListener('click', () => this.restartGame());
-        document.getElementById('sound-toggle').addEventListener('click', () => this.toggleSound());
-    }
-    
-    /**
-     * Toggle sound on/off and update the UI button appearance
-     * Changes button text and styling to reflect current sound state
-     */
-    toggleSound() {
-        this.soundManager.enabled = !this.soundManager.enabled;
-        const button = document.getElementById('sound-toggle');
-        if (this.soundManager.enabled) {
-            button.textContent = '🔊';
-            button.title = 'Sound ON - Click to mute';
-            button.classList.remove('muted');
-        } else {
-            button.textContent = '🔇';
-            button.title = 'Sound OFF - Click to enable';
-            button.classList.add('muted');
-        }
     }
     
     /**
@@ -826,60 +790,6 @@ class TetrascapeGame {
         
         this.draw();
         requestAnimationFrame(() => this.gameLoop());
-    }
-    
-    /**
-     * Handle keyboard input for game controls
-     * Processes arrow keys, space, shift, and number keys for movement and power-ups
-     * @param {KeyboardEvent} e - The keyboard event object
-     */
-    handleKeyPress(e) {
-        if (!this.gameRunning || this.gamePaused || this.isAnimatingLineClear) return;
-        
-        switch(e.code) {
-            case 'ArrowLeft':
-                e.preventDefault();
-                this.movePiece(-1, 0);
-                break;
-            case 'ArrowRight':
-                e.preventDefault();
-                this.movePiece(1, 0);
-                break;
-            case 'ArrowDown':
-                e.preventDefault();
-                this.softDrop();
-                break;
-            case 'Space':
-                e.preventDefault();
-                this.rotatePiece();
-                break;
-            case 'ShiftLeft':
-            case 'ShiftRight':
-                e.preventDefault();
-                this.hardDrop();
-                break;
-            case 'KeyP':
-                e.preventDefault();
-                this.togglePause();
-                break;
-            // Power-up keys
-            case 'Digit1':
-                e.preventDefault();
-                this.usePowerup('dynamite');
-                break;
-            case 'Digit2':
-                e.preventDefault();
-                this.usePowerup('shovel');
-                break;
-            case 'Digit3':
-                e.preventDefault();
-                this.usePowerup('trade');
-                break;
-            case 'Digit4':
-                e.preventDefault();
-                this.usePowerup('slow');
-                break;
-        }
     }
     
     /**
