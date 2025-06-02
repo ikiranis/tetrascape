@@ -765,15 +765,12 @@ class TetrascapeGame {
     
     /**
      * Perform a hard drop (instantly drop piece to bottom)
-     * Awards points based on distance dropped and immediately places piece
+     * Instantly drops piece to the bottom without awarding points
      */
     hardDrop() {
-        let cellsDropped = 0;
         while (this.isValidMove(this.currentPiece.x, this.currentPiece.y + 1, this.currentPiece.shape)) {
             this.currentPiece.y++;
-            cellsDropped++;
         }
-        this.score += cellsDropped * 2; // Score for hard drop
         this.soundManager.playHardDrop();
         this.placePiece();
     }

@@ -138,7 +138,7 @@ The left side of the game displays a comprehensive statistics panel that shows:
 - **Triple lines**: 500 points
 - **Tetris (4 lines)**: 800 points
 - **Soft drop**: 1 point per cell
-- **Hard drop**: 2 points per cell
+- **Hard drop**: No points (convenience feature)
 - **⏰ Time Bonus**: +2 seconds per line cleared (Tetris earns +8 seconds, doubled to +16 seconds total)
 - **🎬 Visual Effects**: Individual block animations when lines are cleared
 - **🔊 Audio Feedback**: Realistic bubble pop sounds for each cleared block
