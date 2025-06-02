@@ -1,8 +1,15 @@
 import SoundManager from './SoundManager.js';
 import PowerUpLogic from './PowerUpLogic.js';
 
-// Tetrascape Game Implementation
+/**
+ * TetrascapeGame - A Tetris-based escape room game
+ * Players must reach score goals within time and block limits to progress through levels
+ */
 class TetrascapeGame {
+    /**
+     * Initialize the TetrascapeGame with all required properties and setup
+     * Sets up canvas contexts, sound management, game state, and power-up systems
+     */
     constructor() {
         this.canvas = document.getElementById('tetris-canvas');
         this.ctx = this.canvas.getContext('2d');
@@ -95,14 +102,26 @@ class TetrascapeGame {
         this.powerUpLogic = new PowerUpLogic(this.soundManager, this.triggerPowerupAnimation.bind(this));
     }
     
+    /**
+     * Initialize the game board with empty cells
+     * Creates a 2D array filled with zeros representing empty spaces
+     */
     initBoard() {
         this.board = Array(this.BOARD_HEIGHT).fill().map(() => Array(this.BOARD_WIDTH).fill(0));
     }
     
+    /**
+     * Set up keyboard event listeners for game controls
+     * Binds keydown events to the handleKeyPress method
+     */
     setupEventListeners() {
         document.addEventListener('keydown', (e) => this.handleKeyPress(e));
     }
     
+    /**
+     * Set up click event listeners for UI buttons
+     * Binds start, pause, restart, and sound toggle buttons to their respective methods
+     */
     setupControls() {
         document.getElementById('start-button').addEventListener('click', () => this.startGame());
         document.getElementById('pause-button').addEventListener('click', () => this.togglePause());
@@ -110,6 +129,10 @@ class TetrascapeGame {
         document.getElementById('sound-toggle').addEventListener('click', () => this.toggleSound());
     }
     
+    /**
+     * Toggle sound on/off and update the UI button appearance
+     * Changes button text and styling to reflect current sound state
+     */
     toggleSound() {
         this.soundManager.enabled = !this.soundManager.enabled;
         const button = document.getElementById('sound-toggle');
@@ -124,6 +147,11 @@ class TetrascapeGame {
         }
     }
     
+    /**
+     * Generate level goals based on current level
+     * Sets score requirements, time limits, block limits, and rewards for each stage
+     * Difficulty increases with each level
+     */
     generateLevelGoals() {
         const stages = [
             { minScore: 500, timeLimit: 180, maxBlocks: 50, reward: 100 },
@@ -149,6 +177,11 @@ class TetrascapeGame {
         this.levelStartTime = Date.now();
     }
     
+    /**
+     * Check if the current stage has been completed or failed
+     * Evaluates score goals, time remaining, and block usage
+     * Triggers stage completion or failure accordingly
+     */
     checkStageCompletion() {
         if (this.stageCompleted) return;
         
@@ -162,6 +195,11 @@ class TetrascapeGame {
         }
     }
     
+    /**
+     * Handle successful stage completion
+     * Stops the game, plays completion effects, calculates bonuses, and shows store
+     * @param {number} earnedMoney - Total money earned from completing the stage
+     */
     completeStage() {
         this.stageCompleted = true;
         this.gameRunning = false;
@@ -193,6 +231,10 @@ class TetrascapeGame {
         }, 1000);
     }
     
+    /**
+     * Handle stage failure (time up, blocks exceeded, or piece collision)
+     * Stops the game, plays game over sound, and shows game over screen
+     */
     failStage() {
         this.gameRunning = false;
         this.stopTimerInterval(); // Stop timer when stage fails
@@ -204,6 +246,11 @@ class TetrascapeGame {
         document.getElementById('restart-button').disabled = true;
     }
     
+    /**
+     * Display the store modal after completing a stage
+     * Shows completion stats, available power-ups for purchase, and next level button
+     * @param {number} earnedMoney - Amount of money earned from completing the stage
+     */
     showStore(earnedMoney) {
         // Create store modal
         const storeModal = document.createElement('div');
@@ -273,6 +320,12 @@ class TetrascapeGame {
         document.body.appendChild(storeModal);
     }
     
+    /**
+     * Purchase a power-up item from the store
+     * Deducts cost from total money, adds item to inventory, and updates UI
+     * @param {string} item - Type of power-up to purchase ('dynamite', 'shovel', 'trade', 'slow')
+     * @param {number} cost - Cost of the item in game currency
+     */
     buyItem(item, cost) {
         if (this.totalMoney >= cost) {
             this.totalMoney -= cost;
@@ -319,6 +372,10 @@ class TetrascapeGame {
         }
     }
     
+    /**
+     * Proceed to the next stage or complete the game
+     * Removes store modal and either starts next level or shows game completion
+     */
     nextStage() {
         document.getElementById('store-modal').remove();
         
@@ -331,6 +388,10 @@ class TetrascapeGame {
         }
     }
     
+    /**
+     * Display the game completion screen when all levels are finished
+     * Shows final stats, achievements, and option to play again
+     */
     showGameComplete() {
         const completeModal = document.createElement('div');
         completeModal.id = 'complete-modal';
@@ -364,6 +425,10 @@ class TetrascapeGame {
         document.body.appendChild(completeModal);
     }
     
+    /**
+     * Update the inventory display in the UI
+     * Shows current count of each power-up type in the inventory panel
+     */
     updateInventoryDisplay() {
         const inventoryDiv = document.getElementById('inventory');
         if (inventoryDiv) {
@@ -377,6 +442,11 @@ class TetrascapeGame {
         }
     }
     
+    /**
+     * Update the piece statistics display
+     * Shows usage count and percentage for each Tetris piece type
+     * Renders mini piece previews on individual canvases
+     */
     updatePieceStatsDisplay() {
         const statsGrid = document.getElementById('stats-grid');
         if (!statsGrid) return;
@@ -410,6 +480,12 @@ class TetrascapeGame {
         });
     }
     
+    /**
+     * Draw a specific piece type on a canvas for display purposes
+     * Used in piece statistics display to show mini previews of each piece
+     * @param {string} canvasId - ID of the canvas element to draw on
+     * @param {string} pieceType - Type of piece to draw ('I', 'O', 'T', 'S', 'Z', 'J', 'L')
+     */
     drawPieceOnCanvas(canvasId, pieceType) {
         const canvas = document.getElementById(canvasId);
         if (!canvas) return;
@@ -443,6 +519,11 @@ class TetrascapeGame {
         }
     }
     
+    /**
+     * Use a power-up from the inventory
+     * Activates the power-up effect, plays sounds/animations, and updates inventory
+     * @param {string} type - Type of power-up to use ('dynamite', 'shovel', 'trade', 'slow')
+     */
     usePowerup(type) {
         if (this.inventory[type] <= 0) {
             this.soundManager.playError();
@@ -494,6 +575,10 @@ class TetrascapeGame {
         }
     }
         
+    /**
+     * Update character progress based on current score relative to goal
+     * Moves character position and updates character state (waiting/working/escaping)
+     */
     updateCharacterProgress() {
         if (!this.levelGoals.minScore) return;
         
@@ -518,6 +603,10 @@ class TetrascapeGame {
         }
     }
     
+    /**
+     * Set the character's visual state and update display
+     * @param {string} state - Character state ('waiting', 'working', 'escaping')
+     */
     setCharacterState(state) {
         if (this.characterState === state) return;
         
@@ -528,6 +617,11 @@ class TetrascapeGame {
         this.renderCharacter(); // Add this line to update the emoji
     }
     
+    /**
+     * Trigger a power-up animation on the character
+     * Adds CSS animation classes and automatically removes them after completion
+     * @param {string} type - Type of power-up animation to trigger
+     */
     triggerPowerupAnimation(type) {
         if (!this.characterElement) return;
         
@@ -549,6 +643,10 @@ class TetrascapeGame {
         }, type === 'shovel' ? 1500 : 1000);
     }
     
+    /**
+     * Render the character emoji based on current state and active animations
+     * Updates character element innerHTML with appropriate emoji
+     */
     renderCharacter() {
         if (!this.characterElement) return;
         
@@ -582,6 +680,11 @@ class TetrascapeGame {
         this.characterElement.innerHTML = characterEmoji;
     }
     
+    /**
+     * Generate a random Tetris piece
+     * Selects randomly from available piece types, tracks statistics, and awards points
+     * @returns {Object} New piece object with shape, color, and starting position
+     */
     getRandomPiece() {
         const pieceKeys = Object.keys(this.pieces);
         const randomKey = pieceKeys[Math.floor(Math.random() * pieceKeys.length)];
@@ -603,6 +706,10 @@ class TetrascapeGame {
         };
     }
     
+    /**
+     * Start a new game or restart the current level
+     * Initializes all game state, generates goals, sets up UI, and begins game loop
+     */
     startGame() {
         this.gameRunning = true;
         this.gamePaused = false;
@@ -654,6 +761,10 @@ class TetrascapeGame {
         this.gameLoop();
     }
     
+    /**
+     * Toggle game pause state
+     * Pauses/resumes game loop, timer, and updates pause button appearance
+     */
     togglePause() {
         if (!this.gameRunning) return;
         
@@ -676,12 +787,21 @@ class TetrascapeGame {
         }
     }
     
+    /**
+     * Restart the current game level
+     * Stops current game and starts fresh from the beginning of the current level
+     */
     restartGame() {
         this.gameRunning = false;
         this.gamePaused = false;
         this.startGame();
     }
     
+    /**
+     * Main game loop that runs continuously during gameplay
+     * Handles piece dropping, power-up timers, stage completion checks, and rendering
+     * Uses requestAnimationFrame for smooth 60fps gameplay
+     */
     gameLoop() {
         if (!this.gameRunning || this.gamePaused || this.isAnimatingLineClear) return;
         
@@ -708,6 +828,11 @@ class TetrascapeGame {
         requestAnimationFrame(() => this.gameLoop());
     }
     
+    /**
+     * Handle keyboard input for game controls
+     * Processes arrow keys, space, shift, and number keys for movement and power-ups
+     * @param {KeyboardEvent} e - The keyboard event object
+     */
     handleKeyPress(e) {
         if (!this.gameRunning || this.gamePaused || this.isAnimatingLineClear) return;
         
@@ -757,6 +882,13 @@ class TetrascapeGame {
         }
     }
     
+    /**
+     * Move the current piece by the specified offset
+     * Validates the move before applying and plays appropriate sound effects
+     * @param {number} dx - Horizontal movement offset (-1 for left, 1 for right, 0 for no movement)
+     * @param {number} dy - Vertical movement offset (1 for down, 0 for no movement)
+     * @returns {boolean} True if the move was successful, false if blocked
+     */
     movePiece(dx, dy) {
         if (this.isValidMove(this.currentPiece.x + dx, this.currentPiece.y + dy, this.currentPiece.shape)) {
             this.currentPiece.x += dx;
@@ -772,6 +904,10 @@ class TetrascapeGame {
         return false;
     }
     
+    /**
+     * Perform a soft drop (move piece down one row)
+     * If movement fails, places the piece on the board
+     */
     softDrop() {
         if (this.movePiece(0, 1)) {
             this.soundManager.playSoftDrop();
@@ -781,6 +917,10 @@ class TetrascapeGame {
         }
     }
     
+    /**
+     * Perform a hard drop (instantly drop piece to bottom)
+     * Awards points based on distance dropped and immediately places piece
+     */
     hardDrop() {
         let cellsDropped = 0;
         while (this.isValidMove(this.currentPiece.x, this.currentPiece.y + 1, this.currentPiece.shape)) {
@@ -792,6 +932,11 @@ class TetrascapeGame {
         this.placePiece();
     }
     
+    /**
+     * Rotate the current piece 90 degrees clockwise
+     * Includes wall kick logic to handle rotation near boundaries
+     * Supports both square and rectangular piece shapes
+     */
     rotatePiece() {
         const originalShape = this.currentPiece.shape.map(row => [...row]);
         const N = this.currentPiece.shape.length;
@@ -831,6 +976,14 @@ class TetrascapeGame {
         }
     }
     
+    /**
+     * Check if a move is valid (no collisions or boundary violations)
+     * Tests piece placement against board boundaries and existing blocks
+     * @param {number} x - X position to test
+     * @param {number} y - Y position to test  
+     * @param {Array[]} shape - 2D array representing the piece shape
+     * @returns {boolean} True if the move is valid, false if blocked
+     */
     isValidMove(x, y, shape) {
         for (let r = 0; r < shape.length; r++) {
             for (let c = 0; c < shape[r].length; c++) {
@@ -850,6 +1003,11 @@ class TetrascapeGame {
         return true;
     }
     
+    /**
+     * Place the current piece permanently on the board
+     * Adds piece blocks to board, clears completed lines, and spawns next piece
+     * Checks for game over condition if new piece cannot be placed
+     */
     placePiece() {
         for (let r = 0; r < this.currentPiece.shape.length; r++) {
             for (let c = 0; c < this.currentPiece.shape[r].length; c++) {
@@ -878,6 +1036,10 @@ class TetrascapeGame {
         this.updateCharacterProgress();
     }
     
+    /**
+     * Check for and clear completed horizontal lines
+     * Initiates block pop animations for visual feedback before line removal
+     */
     clearLines() {
         // Find completed lines
         const completedLines = [];
@@ -902,6 +1064,12 @@ class TetrascapeGame {
         }
     }
 
+    /**
+     * Animate individual block pops for completed lines
+     * Creates DOM elements with CSS animations for each block in completed lines
+     * @param {number[]} completedLines - Array of row indices that are completed
+     * @param {Function} onComplete - Callback function to execute when animations finish
+     */
     animateBlockPops(completedLines, onComplete) {
         const allBlocks = [];
         
@@ -975,6 +1143,11 @@ class TetrascapeGame {
         }, totalAnimationTime);
     }
 
+    /**
+     * Finalize line clearing after animations complete
+     * Removes completed lines, applies gravity, updates score, and adds time bonuses
+     * @param {number[]} completedLines - Array of row indices that were completed
+     */
     finalizeLinesClearing(completedLines) {
         const linesCleared = completedLines.length;
         
@@ -1053,6 +1226,11 @@ class TetrascapeGame {
         }
     }
     
+    /**
+     * Main rendering method that draws the entire game state
+     * Renders board blocks, current piece, and next piece preview
+     * Called every frame during the game loop
+     */
     draw() {
         // Clear main canvas
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -1105,6 +1283,18 @@ class TetrascapeGame {
         }
     }
     
+    /**
+     * Draw a single block with glassmorphism visual effects
+     * Creates glossy gradients, highlights, shadows, and subtle borders
+     * @param {CanvasRenderingContext2D} context - Canvas context to draw on
+     * @param {number} x - Block X coordinate
+     * @param {number} y - Block Y coordinate  
+     * @param {string} color - Hex color code for the block
+     * @param {number} blockSize - Size of the block in pixels (default: BLOCK_SIZE)
+     * @param {number} offsetX - X offset for positioning (default: 0)
+     * @param {number} offsetY - Y offset for positioning (default: 0)
+     * @param {boolean} isNextPiece - Whether this is for next piece preview (default: false)
+     */
     drawBlock(context, x, y, color, blockSize = this.BLOCK_SIZE, offsetX = 0, offsetY = 0, isNextPiece = false) {
         const blockX = offsetX + x * blockSize;
         const blockY = offsetY + y * blockSize;
@@ -1188,6 +1378,10 @@ class TetrascapeGame {
         context.strokeRect(blockX + 0.5, blockY + 0.5, blockSize - 1, blockSize - 1);
     }
     
+    /**
+     * Update all game display elements in the UI
+     * Updates score, level, lines, money, goals, and timer displays
+     */
     updateDisplay() {
         document.getElementById('score').textContent = this.score;
         document.getElementById('level').textContent = this.currentLevel;
@@ -1207,6 +1401,11 @@ class TetrascapeGame {
         this.updateTimerDisplay(); // Ensure timer is updated with other display elements
     }
     
+    /**
+     * Update the countdown timer display and progress bar
+     * Shows remaining time in MM:SS format and updates progress bar color
+     * Handles display when game is paused or completed
+     */
     updateTimerDisplay() {
         if (!this.gameRunning || this.gamePaused || this.stageCompleted) {
             // If timer is not active, ensure display is cleared or shows default
@@ -1242,6 +1441,10 @@ class TetrascapeGame {
         }
     }
     
+    /**
+     * Start the timer interval for live time updates
+     * Clears any existing interval and sets up new one with 1-second updates
+     */
     startTimerInterval() {
         this.stopTimerInterval(); // Clear any existing interval
         this.timerInterval = setInterval(() => {
@@ -1251,6 +1454,10 @@ class TetrascapeGame {
         this.updateTimerDisplay(); // Initial update
     }
     
+    /**
+     * Stop the timer interval
+     * Clears the interval and sets reference to null
+     */
     stopTimerInterval() {
         if (this.timerInterval) {
             clearInterval(this.timerInterval);

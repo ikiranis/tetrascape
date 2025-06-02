@@ -1,10 +1,23 @@
+/**
+ * PowerUpLogic - Handles power-up effects and animations
+ * Manages the activation and application of various power-ups in the game
+ */
 class PowerUpLogic {
+    /**
+     * Initialize PowerUpLogic with sound manager and animation callback
+     * @param {SoundManager} soundManager - Instance for playing power-up sounds
+     * @param {Function} animationTrigger - Callback function to trigger character animations
+     */
     constructor(soundManager, animationTrigger) {
         this.soundManager = soundManager;
         this.triggerAnimation = animationTrigger; // callback: (type) => void
     }
 
-    // Activates a powerup (plays sounds, triggers animation via callback).
+    /**
+     * Activate a power-up with sound and animation effects
+     * Plays generic power-up sound, triggers character animation, and plays specific sound
+     * @param {string} type - Type of power-up to activate ('dynamite', 'shovel', 'trade', 'slow')
+     */
     activate(type) {
         this.soundManager.playPowerup(); // Generic powerup sound
         this.triggerAnimation(type);     // Trigger associated animation
@@ -18,10 +31,14 @@ class PowerUpLogic {
         }
     }
 
-    // Applies the effect of Dynamite power-up.
-    // board: The game board array.
-    // pieceContext: { shape, x, y } of the piece that was just placed.
-    // BOARD_WIDTH, BOARD_HEIGHT: Dimensions of the board.
+    /**
+     * Apply the dynamite power-up effect to the game board
+     * Creates explosion centers at piece locations and clears 3x3 areas around each center
+     * @param {Array[]} board - 2D array representing the game board
+     * @param {Object} pieceContext - Object containing shape, x, y of the placed piece
+     * @param {number} BOARD_WIDTH - Width of the game board
+     * @param {number} BOARD_HEIGHT - Height of the game board
+     */
     applyDynamiteEffect(board, pieceContext, BOARD_WIDTH, BOARD_HEIGHT) {
         const explosionCenters = [];
         for (let r = 0; r < pieceContext.shape.length; r++) {
@@ -52,10 +69,14 @@ class PowerUpLogic {
         });
     }
 
-    // Applies the effect of Shovel power-up.
-    // board: The game board array.
-    // currentPiece: The current Tetris piece being controlled.
-    // BOARD_HEIGHT, BOARD_WIDTH: Dimensions of the board.
+    /**
+     * Apply the shovel power-up effect to the game board
+     * Clears an entire vertical column at the center of the current piece
+     * @param {Array[]} board - 2D array representing the game board
+     * @param {Object} currentPiece - Current piece object with shape and position
+     * @param {number} BOARD_HEIGHT - Height of the game board
+     * @param {number} BOARD_WIDTH - Width of the game board
+     */
     applyShovelEffect(board, currentPiece, BOARD_HEIGHT, BOARD_WIDTH) {
         if (!currentPiece || !currentPiece.shape || !currentPiece.shape[0]) return; // Safety check
         const centerX = currentPiece.x + Math.floor(currentPiece.shape[0].length / 2);

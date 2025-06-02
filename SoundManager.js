@@ -1,10 +1,22 @@
+/**
+ * SoundManager - Handles all audio effects for the game
+ * Uses Web Audio API to generate procedural sound effects
+ */
 class SoundManager {
+    /**
+     * Initialize the SoundManager with Web Audio API
+     * Sets up audio context and enables sound by default
+     */
     constructor() {
         this.audioContext = null;
         this.enabled = true;
         this.init();
     }
     
+    /**
+     * Initialize the Web Audio API context
+     * Falls back gracefully if Web Audio API is not supported
+     */
     init() {
         try {
             this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -14,7 +26,13 @@ class SoundManager {
         }
     }
     
-    // Create different sound effects
+    /**
+     * Generate a tone with specified parameters using Web Audio API
+     * @param {number} frequency - Frequency of the tone in Hz
+     * @param {number} duration - Duration of the tone in seconds
+     * @param {string} type - Oscillator type ('sine', 'square', 'sawtooth', 'triangle')
+     * @param {number} volume - Volume level (0.0 to 1.0)
+     */
     playTone(frequency, duration, type = 'sine', volume = 0.1) {
         if (!this.enabled || !this.audioContext) return;
         
@@ -35,124 +53,82 @@ class SoundManager {
         oscillator.stop(this.audioContext.currentTime + duration);
     }
     
-    // Specific sound effects
+    /**
+     * Play sound effect for piece horizontal movement
+     * Short, subtle square wave sound
+     */
     playMove() {
         this.playTone(200, 0.1, 'square', 0.05);
     }
     
+    /**
+     * Play sound effect for piece rotation
+     * Triangle wave with slightly longer duration
+     */
     playRotate() {
         this.playTone(300, 0.15, 'triangle', 0.06);
     }
     
+    /**
+     * Play sound effect for piece landing/dropping
+     * Deep sawtooth wave for impact sound
+     */
     playDrop() {
         this.playTone(100, 0.2, 'sawtooth', 0.08);
     }
     
+    /**
+     * Play sound effect for soft drop (arrow down)
+     * Subtle sine wave for gentle downward movement
+     */
     playSoftDrop() {
-        // Soft drop sound - subtle but noticeable
         this.playTone(150, 0.1, 'sine', 0.04);
     }
     
+    /**
+     * Play sound effect for hard drop (shift key)
+     * More intense double-impact sound effect
+     */
     playHardDrop() {
-        // More intense drop sound
         this.playTone(80, 0.3, 'sawtooth', 0.12);
         setTimeout(() => this.playTone(60, 0.2, 'square', 0.08), 100);
     }
     
+    /**
+     * Play sound effect for line clearing
+     * Pleasant ascending notes sequence
+     */
     playLineClear() {
-        // Pleasant ascending notes
         setTimeout(() => this.playTone(400, 0.15, 'sine', 0.1), 0);
         setTimeout(() => this.playTone(500, 0.15, 'sine', 0.1), 50);
         setTimeout(() => this.playTone(600, 0.15, 'sine', 0.1), 100);
         setTimeout(() => this.playTone(700, 0.2, 'sine', 0.1), 150);
     }
 
+    /**
+     * Play sound effect at the start of line clear sequence
+     * Initial sound before block pop animations
+     */
     playLineClearStart() {
-        // Sound that plays at the beginning of line clear sequence
         this.playTone(500, 0.1, 'square', 0.08);
     }
 
+    /**
+     * Play sound effect when line clear animations complete
+     * Ascending notes to signal completion
+     */
     playLineClearComplete() {
-        // Sound that plays when all blocks in lines have popped
         setTimeout(() => this.playTone(400, 0.15, 'sine', 0.1), 0);
         setTimeout(() => this.playTone(500, 0.15, 'sine', 0.1), 50);
         setTimeout(() => this.playTone(600, 0.15, 'sine', 0.1), 100);
         setTimeout(() => this.playTone(700, 0.2, 'sine', 0.1), 150);
     }
 
+    /**
+     * Play sound effect for individual block popping during line clear
+     * Bubble-like pop with frequency sweep for realistic effect
+     */
     playBlockPop() {
-        // Individual block pop sound - short and satisfying
-        const frequency = 300 + Math.random() * 200; // Randomize frequency slightly
-        this.playTone(frequency, 0.08, 'triangle', 0.06);
-        // Add a subtle higher harmonic for sparkle
-        setTimeout(() => this.playTone(frequency * 1.5, 0.05, 'sine', 0.03), 10);
-    }
-    
-    playTetris() {
-        // Special tetris sound - more explosive and elaborate
-        // Lower boom sounds with higher celebration notes
-        this.playTone(40, 0.4, 'sawtooth', 0.2); // Deep boom
-        setTimeout(() => this.playTone(60, 0.3, 'square', 0.15), 50);
-        setTimeout(() => this.playTone(80, 0.2, 'sawtooth', 0.12), 100);
-        
-        // Triumphant ascending melody with more energy
-        const notes = [523, 659, 784, 1047, 1319]; // C, E, G, C, E (higher octave)
-        notes.forEach((note, index) => {
-            setTimeout(() => this.playTone(note, 0.25, 'triangle', 0.15), 200 + index * 80);
-            // Add harmonics for richer sound
-            setTimeout(() => this.playTone(note * 1.5, 0.2, 'sine', 0.08), 220 + index * 80);
-        });
-        
-        // Final explosive flourish
-        setTimeout(() => {
-            this.playTone(100, 0.2, 'sawtooth', 0.18);
-            setTimeout(() => this.playTone(1568, 0.3, 'sine', 0.12), 50); // High G
-        }, 600);
-    }
-    
-    playPowerup() {
-        // Power-up activation sound
-        this.playTone(800, 0.1, 'square', 0.1);
-        setTimeout(() => this.playTone(1000, 0.1, 'square', 0.1), 100);
-        setTimeout(() => this.playTone(1200, 0.2, 'sine', 0.08), 200);
-    }
-    
-    playExplosion() {
-        // Explosion sound for dynamite
-        this.playTone(50, 0.3, 'sawtooth', 0.15);
-        setTimeout(() => this.playTone(80, 0.2, 'square', 0.12), 100);
-        setTimeout(() => this.playTone(120, 0.15, 'triangle', 0.08), 200);
-    }
-    
-    playDig() {
-        // Digging sound for shovel
-        for (let i = 0; i < 5; i++) {
-            setTimeout(() => this.playTone(150 + Math.random() * 50, 0.1, 'sawtooth', 0.06), i * 100);
-        }
-    }
-    
-    playTrade() {
-        // Trade sound - two-tone exchange
-        this.playTone(600, 0.15, 'triangle', 0.08);
-        setTimeout(() => this.playTone(400, 0.15, 'triangle', 0.08), 150);
-    }
-    
-    playSlow() {
-        // Time extension effect - ascending celestial sounds
-        const frequencies = [440, 523, 659, 784, 880]; // A, C, E, G, A
-        frequencies.forEach((freq, index) => {
-            setTimeout(() => this.playTone(freq, 0.3, 'sine', 0.06), index * 100);
-        });
-        // Add sparkle effect
-        setTimeout(() => {
-            for (let i = 0; i < 8; i++) {
-                setTimeout(() => this.playTone(1200 + Math.random() * 400, 0.1, 'triangle', 0.03), i * 50);
-            }
-        }, 500);
-    }
-
-    playBlockPop() {
-        // Bubble pop sound - quick pitch drop with resonant quality
         const startFreq = 400 + Math.random() * 300; // Higher starting frequency
         const endFreq = 150 + Math.random() * 100;   // Lower ending frequency
         
@@ -198,20 +174,96 @@ class SoundManager {
             noiseOsc.stop(this.audioContext.currentTime + 0.06);
         }, 20);
     }
-
-    playLineClearStart() {
-        // Sound that plays at the beginning of line clear sequence
-        this.playTone(500, 0.1, 'square', 0.08);
-    }
-
-    playLineClearComplete() {
-        // Sound that plays when all blocks in lines have popped
-        setTimeout(() => this.playTone(400, 0.15, 'sine', 0.1), 0);
-        setTimeout(() => this.playTone(500, 0.15, 'sine', 0.1), 50);
-        setTimeout(() => this.playTone(600, 0.15, 'sine', 0.1), 100);
-        setTimeout(() => this.playTone(700, 0.2, 'sine', 0.1), 150);
+    
+    /**
+     * Play special sound effect for Tetris (4+ lines cleared)
+     * Elaborate fanfare with multiple components and harmonics
+     */
+    playTetris() {
+        this.playTone(40, 0.4, 'sawtooth', 0.2); // Deep boom
+        setTimeout(() => this.playTone(60, 0.3, 'square', 0.15), 50);
+        setTimeout(() => this.playTone(80, 0.2, 'sawtooth', 0.12), 100);
+        
+        // Triumphant ascending melody with more energy
+        const notes = [523, 659, 784, 1047, 1319]; // C, E, G, C, E (higher octave)
+        notes.forEach((note, index) => {
+            setTimeout(() => this.playTone(note, 0.25, 'triangle', 0.15), 200 + index * 80);
+            // Add harmonics for richer sound
+            setTimeout(() => this.playTone(note * 1.5, 0.2, 'sine', 0.08), 220 + index * 80);
+        });
+        
+        // Final explosive flourish
+        setTimeout(() => {
+            this.playTone(100, 0.2, 'sawtooth', 0.18);
+            setTimeout(() => this.playTone(1568, 0.3, 'sine', 0.12), 50); // High G
+        }, 600);
     }
     
+    /**
+     * Play generic power-up activation sound
+     * Ascending electronic tones to signal power-up use
+     */
+    playPowerup() {
+        // Power-up activation sound
+        this.playTone(800, 0.1, 'square', 0.1);
+        setTimeout(() => this.playTone(1000, 0.1, 'square', 0.1), 100);
+        setTimeout(() => this.playTone(1200, 0.2, 'sine', 0.08), 200);
+    }
+    
+    /**
+     * Play explosion sound effect for dynamite power-up
+     * Multi-layered explosion with bass and mid-range components
+     */
+    playExplosion() {
+        // Explosion sound for dynamite
+        this.playTone(50, 0.3, 'sawtooth', 0.15);
+        setTimeout(() => this.playTone(80, 0.2, 'square', 0.12), 100);
+        setTimeout(() => this.playTone(120, 0.15, 'triangle', 0.08), 200);
+    }
+    
+    /**
+     * Play digging sound effect for shovel power-up
+     * Series of digging sounds with randomized frequencies
+     */
+    playDig() {
+        // Digging sound for shovel
+        for (let i = 0; i < 5; i++) {
+            setTimeout(() => this.playTone(150 + Math.random() * 50, 0.1, 'sawtooth', 0.06), i * 100);
+        }
+    }
+    
+    /**
+     * Play trade sound effect for piece exchange power-up
+     * Two-tone exchange sound to represent swapping
+     */
+    playTrade() {
+        // Trade sound - two-tone exchange
+        this.playTone(600, 0.15, 'triangle', 0.08);
+        setTimeout(() => this.playTone(400, 0.15, 'triangle', 0.08), 150);
+    }
+    
+    /**
+     * Play time extension sound effect for slow power-up
+     * Ascending celestial tones with sparkle effects
+     */
+    playSlow() {
+        // Time extension effect - ascending celestial sounds
+        const frequencies = [440, 523, 659, 784, 880]; // A, C, E, G, A
+        frequencies.forEach((freq, index) => {
+            setTimeout(() => this.playTone(freq, 0.3, 'sine', 0.06), index * 100);
+        });
+        // Add sparkle effect
+        setTimeout(() => {
+            for (let i = 0; i < 8; i++) {
+                setTimeout(() => this.playTone(1200 + Math.random() * 400, 0.1, 'triangle', 0.03), i * 50);
+            }
+        }, 500);
+    }
+    
+    /**
+     * Play stage completion sound effect
+     * Victory fanfare with ascending melody
+     */
     playStageComplete() {
         // Victory fanfare
         const melody = [523, 659, 784, 1047]; // C, E, G, C
@@ -220,6 +272,10 @@ class SoundManager {
         });
     }
     
+    /**
+     * Play game over sound effect
+     * Sad descending notes to indicate failure
+     */
     playGameOver() {
         // Sad descending notes
         const notes = [400, 350, 300, 250];
@@ -228,6 +284,10 @@ class SoundManager {
         });
     }
     
+    /**
+     * Play escape success sound effect
+     * Triumphant ascending scale for successful escape
+     */
     playEscape() {
         // Escape success - ascending triumphant notes
         const notes = [262, 330, 392, 523, 659, 784]; // C major scale
@@ -236,17 +296,29 @@ class SoundManager {
         });
     }
     
+    /**
+     * Play purchase confirmation sound effect
+     * Two-tone confirmation for successful store purchases
+     */
     playPurchase() {
         // Purchase confirmation sound
         this.playTone(600, 0.1, 'triangle', 0.08);
         setTimeout(() => this.playTone(800, 0.15, 'sine', 0.06), 100);
     }
     
+    /**
+     * Play error sound effect
+     * Low sawtooth wave to indicate invalid action
+     */
     playError() {
         // Error/invalid action sound
         this.playTone(150, 0.3, 'sawtooth', 0.1);
     }
 
+    /**
+     * Play falling sound effect when blocks fall after line clear
+     * Descending whoosh effect to simulate falling blocks
+     */
     playFalling() {
         // Falling sound - descending whoosh when blocks fall down
         const startFreq = 300;
@@ -278,6 +350,10 @@ class SoundManager {
         oscillator.stop(this.audioContext.currentTime + duration);
     }
 
+    /**
+     * Play crash sound effect when falling blocks settle
+     * Deep rumbling crash with multiple frequency components
+     */
     playCrash() {
         // Crash sound when lines above fall down after block pops
         // Deep rumbling crash with multiple frequency components
