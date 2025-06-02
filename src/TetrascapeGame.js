@@ -1097,6 +1097,19 @@ class TetrascapeGame {
             }
         }
         
+        // Draw shadow piece first (behind current piece)
+        const shadowPiece = this.calculateShadowPiece();
+        if (shadowPiece && this.currentPiece && shadowPiece.y !== this.currentPiece.y) {
+            // Only draw shadow if it's different from current piece position
+            for (let r = 0; r < shadowPiece.shape.length; r++) {
+                for (let c = 0; c < shadowPiece.shape[r].length; c++) {
+                    if (shadowPiece.shape[r][c] !== 0) {
+                        this.drawShadowBlock(this.ctx, shadowPiece.x + c, shadowPiece.y + r, this.colors[shadowPiece.color]);
+                    }
+                }
+            }
+        }
+        
         // Draw current piece with glassmorphism effect
         if (this.currentPiece) {
             for (let r = 0; r < this.currentPiece.shape.length; r++) {
@@ -1207,6 +1220,34 @@ class TetrascapeGame {
         context.strokeRect(blockX + 0.5, blockY + 0.5, blockSize - 1, blockSize - 1);
     }
     
+    /**
+     * Draw a shadow/ghost piece block with transparent appearance
+     * Creates a very subtle transparent version of the block to show landing position
+     * @param {CanvasRenderingContext2D} context - Canvas context to draw on
+     * @param {number} x - Block X coordinate
+     * @param {number} y - Block Y coordinate  
+     * @param {string} color - Hex color code for the block
+     * @param {number} blockSize - Size of the block in pixels (default: BLOCK_SIZE)
+     */
+    drawShadowBlock(context, x, y, color, blockSize = this.BLOCK_SIZE) {
+        const blockX = x * blockSize;
+        const blockY = y * blockSize;
+        
+        // Parse the base color to create a semi-transparent version
+        const colorMatch = color.match(/^#([0-9a-f]{6})$/i);
+        let r = 255, g = 255, b = 255; // Default to white if parsing fails
+        
+        if (colorMatch) {
+            r = parseInt(colorMatch[1].substr(0, 2), 16);
+            g = parseInt(colorMatch[1].substr(2, 2), 16);
+            b = parseInt(colorMatch[1].substr(4, 2), 16);
+        }
+        
+        // Draw with very low opacity fill only - no borders
+        context.fillStyle = `rgba(${r}, ${g}, ${b}, 0.15)`;
+        context.fillRect(blockX, blockY, blockSize, blockSize);
+    }
+
     /**
      * Update all game display elements in the UI
      * Updates score, level, lines, money, goals, and timer displays
@@ -1367,6 +1408,30 @@ class TetrascapeGame {
                 }
             }
         }
+    }
+
+    /**
+     * Calculate the shadow piece position (where current piece would land)
+     * Used to show ghost piece preview at the bottom
+     * @returns {Object|null} Shadow piece object with x, y, shape, and color properties
+     */
+    calculateShadowPiece() {
+        if (!this.currentPiece) return null;
+        
+        // Create a copy of the current piece
+        const shadowPiece = {
+            x: this.currentPiece.x,
+            y: this.currentPiece.y,
+            shape: this.currentPiece.shape,
+            color: this.currentPiece.color
+        };
+        
+        // Drop it down until it can't move further
+        while (this.isValidMove(shadowPiece.x, shadowPiece.y + 1, shadowPiece.shape)) {
+            shadowPiece.y++;
+        }
+        
+        return shadowPiece;
     }
 }
 
