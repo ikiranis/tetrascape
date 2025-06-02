@@ -49,6 +49,10 @@ class TetrascapeGame {
         // Timer interval for live time updates
         this.timerInterval = null;
         
+        // Pause time tracking
+        this.pausedTime = 0; // Total time spent paused (in milliseconds)
+        this.pauseStartTime = 0; // When current pause started
+        
         // Character system - no longer drawn on canvas
         this.characterElement = document.getElementById('character');
         this.characterState = 'waiting'; // waiting, working, escaping
@@ -152,7 +156,7 @@ class TetrascapeGame {
     checkStageCompletion() {
         if (this.stageCompleted) return;
         
-        const timeElapsed = Math.floor((Date.now() - this.levelStartTime) / 1000);
+        const timeElapsed = this.getElapsedTime();
         const timeRemaining = this.timeLimit - timeElapsed;
         
         if (this.score >= this.levelGoals.minScore && timeRemaining > 0) {
@@ -160,6 +164,22 @@ class TetrascapeGame {
         } else if (timeRemaining <= 0 || this.blocksUsed >= this.maxBlocks) {
             this.failStage();
         }
+    }
+    
+    /**
+     * Get elapsed time in seconds, accounting for paused time
+     * @returns {number} Elapsed time in seconds (excluding paused time)
+     */
+    getElapsedTime() {
+        let totalPausedTime = this.pausedTime;
+        
+        // If currently paused, add current pause duration
+        if (this.gamePaused && this.pauseStartTime > 0) {
+            totalPausedTime += Date.now() - this.pauseStartTime;
+        }
+        
+        const totalElapsedMs = Date.now() - this.levelStartTime - totalPausedTime;
+        return Math.floor(totalElapsedMs / 1000);
     }
     
     /**
@@ -182,7 +202,8 @@ class TetrascapeGame {
         }
         
         // Calculate bonus money
-        const timeBonus = Math.max(0, this.timeLimit - Math.floor((Date.now() - this.levelStartTime) / 1000)) * 10;
+        const timeElapsed = this.getElapsedTime();
+        const timeBonus = Math.max(0, this.timeLimit - timeElapsed) * 10;
         const blockBonus = Math.max(0, this.maxBlocks - this.blocksUsed) * 5;
         const totalEarned = this.levelGoals.reward + timeBonus + blockBonus;
         
@@ -533,6 +554,10 @@ class TetrascapeGame {
             };
         }
         
+        // Reset pause time tracking for new stage
+        this.pausedTime = 0;
+        this.pauseStartTime = 0;
+        
         // Generate stage goals
         this.generateLevelGoals();
         
@@ -570,11 +595,20 @@ class TetrascapeGame {
         this.gamePaused = !this.gamePaused;
         const pauseButton = document.getElementById('pause-button');
         if (this.gamePaused) {
+            // Record when pause started
+            this.pauseStartTime = Date.now();
+            
             pauseButton.textContent = '▶️';
             pauseButton.title = 'Resume';
             // Stop timer interval when paused
             this.stopTimerInterval();
         } else {
+            // Add to total paused time when resuming
+            if (this.pauseStartTime > 0) {
+                this.pausedTime += Date.now() - this.pauseStartTime;
+                this.pauseStartTime = 0;
+            }
+            
             pauseButton.textContent = '⏸️';
             pauseButton.title = 'Pause';
             // Resume timer interval when unpaused
@@ -1152,14 +1186,23 @@ class TetrascapeGame {
      * Handles display when game is paused or completed
      */
     updateTimerDisplay() {
-        if (!this.gameRunning || this.gamePaused || this.stageCompleted) {
+        if (!this.gameRunning || this.stageCompleted) {
             // If timer is not active, ensure display is cleared or shows default
             document.getElementById('time-remaining').textContent = '--:--';
             document.getElementById('time-progress').style.width = '0%';
             return;
         }
         
-        const timeElapsed = Math.floor((Date.now() - this.levelStartTime) / 1000);
+        // Show "(PAUSED)" indicator when paused
+        if (this.gamePaused) {
+            const currentDisplay = document.getElementById('time-remaining').textContent;
+            if (!currentDisplay.includes('(PAUSED)')) {
+                document.getElementById('time-remaining').textContent = currentDisplay + ' (PAUSED)';
+            }
+            return;
+        }
+        
+        const timeElapsed = this.getElapsedTime();
         let timeRemaining = this.timeLimit - timeElapsed;
         
         if (timeRemaining < 0) timeRemaining = 0;

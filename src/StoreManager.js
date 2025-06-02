@@ -64,7 +64,7 @@ class StoreManager {
             currentLevel: this.game.currentLevel,
             earnedMoney: earnedMoney,
             totalMoney: this.game.totalMoney,
-            timeRemaining: this.game.timeLimit - Math.floor((Date.now() - this.game.levelStartTime) / 1000),
+            timeRemaining: this.game.timeLimit - this.game.getElapsedTime(),
             blocksRemaining: this.game.maxBlocks - this.game.blocksUsed,
             storeItems: await this.generateStoreItemsHTML(),
             nextButtonText: this.game.currentLevel >= 5 ? '🏆 Game End' : '➡️ Next Level'
