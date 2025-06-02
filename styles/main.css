@@ -3,6 +3,9 @@
 /* Base styles and variables */
 @import './variables.css';
 
+/* Loading screen styles */
+@import './loading.css';
+
 /* Component styles */
 @import './controls.css';
 @import './layout.css';

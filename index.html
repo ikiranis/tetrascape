@@ -7,33 +7,54 @@
     <link rel="stylesheet" href="styles/main.css">
 </head>
 <body>
-    <!-- UI components will be loaded dynamically by UIManager -->
-    <div id="control-buttons-container">
-        <!-- Control buttons template will be loaded here -->
+    <!-- Loading screen -->
+    <div id="loading-screen" class="loading-screen" aria-label="Loading game">
+        <div class="loading-content">
+            <div class="loading-logo">
+                <h1>Tetrascape</h1>
+            </div>
+            <div class="loading-spinner" aria-hidden="true">
+                <div class="tetris-block block-1"></div>
+                <div class="tetris-block block-2"></div>
+                <div class="tetris-block block-3"></div>
+                <div class="tetris-block block-4"></div>
+            </div>
+            <div class="loading-text" aria-live="polite">Loading game components...</div>
+            <div class="loading-progress" role="progressbar" aria-label="Loading progress">
+                <div class="loading-progress-bar" id="loading-progress-bar"></div>
+            </div>
+        </div>
     </div>
 
-    <div class="game-container">
-        <div class="game-header">
-            <h1>Tetrascape</h1>
+    <!-- Game content - initially hidden -->
+    <div id="game-content" class="game-content" style="opacity: 0; transition: opacity 0.5s ease-in;">        <!-- UI components will be loaded dynamically by UIManager -->
+        <div id="control-buttons-container">
+            <!-- Control buttons template will be loaded here -->
         </div>
-        
-        <div id="score-panel-container">
-            <!-- Score panel template will be loaded here -->
-        </div>
-        
-        <div id="game-board-container">
-            <!-- Game board template (including left panel, main area, side panel) will be loaded here -->
-        </div>
-    </div>
 
-    <div class="credits">
-        Created by Yiannis Kiranis - Fragkiskos Lagonikakis
-    </div>
+        <div class="game-container">
+            <div class="game-header">
+                <h1>Tetrascape</h1>
+            </div>
+            
+            <div id="score-panel-container">
+                <!-- Score panel template will be loaded here -->
+            </div>
+            
+            <div id="game-board-container">
+                <!-- Game board template (including left panel, main area, side panel) will be loaded here -->
+            </div>
+        </div>
 
-    <div class="github-link">
-        <a href="https://github.com/ikiranis/tetrascape" target="_blank" rel="noopener noreferrer">
-            📁 GitHub Repository
-        </a>
+        <div class="credits">
+            Created by Yiannis Kiranis - Fragkiskos Lagonikakis
+        </div>
+
+        <div class="github-link">
+            <a href="https://github.com/ikiranis/tetrascape" target="_blank" rel="noopener noreferrer">
+                📁 GitHub Repository
+            </a>
+        </div>
     </div>
 
     <script type="module" src="src/main.js"></script>

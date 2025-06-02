@@ -1,0 +1,159 @@
+/* Loading Screen Styles */
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f172a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+}
+
+.loading-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loading-content {
+    text-align: center;
+    color: white;
+}
+
+.loading-logo h1 {
+    font-size: 3rem;
+    margin: 0 0 2rem 0;
+    background: linear-gradient(45deg, #bb86fc, #6200ea, #03dac6);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientShift 3s ease-in-out infinite;
+}
+
+.loading-spinner {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 2rem 0;
+}
+
+.tetris-block {
+    width: 20px;
+    height: 20px;
+    border-radius: 3px;
+    animation: tetrisFall 1.5s ease-in-out infinite;
+}
+
+.tetris-block.block-1 {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    animation-delay: 0s;
+}
+
+.tetris-block.block-2 {
+    background: linear-gradient(135deg, #4ecdc4, #00d2d3);
+    animation-delay: 0.2s;
+}
+
+.tetris-block.block-3 {
+    background: linear-gradient(135deg, #45b7d1, #3742fa);
+    animation-delay: 0.4s;
+}
+
+.tetris-block.block-4 {
+    background: linear-gradient(135deg, #f9ca24, #f0932b);
+    animation-delay: 0.6s;
+}
+
+.loading-text {
+    font-size: 1.2rem;
+    margin: 1rem 0;
+    color: rgba(255, 255, 255, 0.8);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.loading-progress {
+    width: 300px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    margin: 2rem auto 0;
+    overflow: hidden;
+}
+
+.loading-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #bb86fc, #6200ea, #03dac6);
+    background-size: 200% 100%;
+    border-radius: 2px;
+    width: 0%;
+    transition: width 0.3s ease-out;
+    animation: progressShimmer 2s ease-in-out infinite;
+}
+
+/* Animations */
+@keyframes gradientShift {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+@keyframes tetrisFall {
+    0%, 100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(20px);
+        opacity: 0.7;
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 0.8;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+@keyframes progressShimmer {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .loading-logo h1 {
+        font-size: 2.5rem;
+    }
+    
+    .loading-text {
+        font-size: 1rem;
+    }
+    
+    .loading-progress {
+        width: 250px;
+    }
+}
+
+@media (max-width: 480px) {
+    .loading-logo h1 {
+        font-size: 2rem;
+    }
+    
+    .loading-progress {
+        width: 200px;
+    }
+}
