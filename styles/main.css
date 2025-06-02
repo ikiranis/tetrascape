@@ -1,0 +1,15 @@
+/* Main CSS File - Imports all component styles */
+
+/* Base styles and variables */
+@import './variables.css';
+
+/* Component styles */
+@import './controls.css';
+@import './layout.css';
+@import './game-canvas.css';
+@import './panels.css';
+@import './modals.css';
+
+/* Responsive and utility styles */
+@import './responsive.css';
+@import './footer.css';

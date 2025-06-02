@@ -1,0 +1,251 @@
+/* Responsive Design Styles */
+@media (max-width: 1024px) {
+    .game-board {
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+    }
+    
+    .left-panel, .side-panel {
+        flex-direction: row;
+        min-width: auto;
+        flex-wrap: wrap;
+        justify-content: center;
+        max-width: 100%;
+    }
+    
+    .left-panel > *, .side-panel > * {
+        flex: 1;
+        min-width: 200px;
+        max-width: 300px;
+    }
+    
+    .controls {
+        order: -1;
+    }
+}
+
+@media (max-width: 768px) {
+    .control-buttons {
+        top: 10px;
+        right: 10px;
+        gap: 6px;
+    }
+    
+    .control-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+    
+    .game-container {
+        padding: 16px;
+        border-radius: 12px;
+        max-width: 95vw;
+        margin: 10px auto;
+    }
+    
+    .game-header h1 {
+        font-size: 1.75rem;
+    }
+    
+    .score-panel {
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 12px;
+    }
+    
+    .score-panel > div {
+        flex: 1;
+        min-width: 80px;
+    }
+    
+    .score-panel span:first-child {
+        font-size: 0.75rem;
+    }
+    
+    .score-panel span:last-child {
+        font-size: 1.25rem;
+    }
+    
+    .left-panel, .side-panel {
+        flex-direction: column;
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    .left-panel > *, .side-panel > * {
+        min-width: auto;
+        max-width: 100%;
+    }
+    
+    #tetris-canvas {
+        width: 280px;
+        height: 560px;
+    }
+    
+    .character-area {
+        width: 284px;
+        height: 75px;
+    }
+    
+    .store-content {
+        max-width: min(350px, 90vw);
+        padding: 16px;
+        margin: 10px;
+        max-height: min(85vh, 550px);
+    }
+    
+    .store-items {
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+    }
+    
+    .store-content {
+        padding: 12px;
+        margin: 6px;
+        max-width: min(320px, 85vw);
+        max-height: min(80vh, 500px);
+    }
+    
+    .store-item {
+        padding: 8px;
+    }
+    
+    .item-icon {
+        font-size: 1.3rem;
+    }
+    
+    .item-name {
+        font-size: 0.75rem;
+    }
+    
+    .item-desc {
+        font-size: 0.65rem;
+    }
+    
+    .store-item button {
+        padding: 5px 8px;
+        font-size: 0.65rem;
+        min-height: 24px;
+    }
+}
+
+/* Extra constraints for high zoom levels or very small viewports */
+@media (max-width: 450px), (max-height: 600px) {
+    .store-content {
+        max-width: min(300px, 90vw);
+        padding: 10px;
+        margin: 4px;
+        max-height: min(85vh, 450px);
+    }
+    
+    .store-content h2 {
+        font-size: 1.2rem;
+        margin-bottom: 8px;
+    }
+    
+    .completion-stats {
+        padding: 8px;
+        margin-bottom: 8px;
+    }
+    
+    .completion-stats p {
+        font-size: 0.75rem;
+        margin: 2px 0;
+    }
+    
+    .store-content h3 {
+        font-size: 1rem;
+        margin-bottom: 8px;
+    }
+    
+    .store-items {
+        gap: 4px;
+        margin: 8px 0;
+    }
+    
+    .store-item {
+        padding: 6px;
+        gap: 4px;
+    }
+    
+    .item-icon {
+        font-size: 1.2rem;
+        margin-bottom: 1px;
+    }
+    
+    .item-name {
+        font-size: 0.7rem;
+    }
+    
+    .item-desc {
+        font-size: 0.6rem;
+        -webkit-line-clamp: 1;
+        line-clamp: 1;
+    }
+    
+    .item-price {
+        font-size: 0.7rem;
+    }
+    
+    .item-inventory {
+        font-size: 0.6rem;
+    }
+    
+    .store-item button {
+        padding: 4px 6px;
+        font-size: 0.6rem;
+        min-height: 22px;
+    }
+    
+    .next-level-btn {
+        padding: 8px 16px;
+        font-size: 0.75rem;
+    }
+    
+    .store-actions {
+        margin-top: 8px;
+    }
+}
+
+@media (max-width: 600px) {
+    .game-container {
+        border-radius: 12px;
+        padding: 16px;
+        max-width: 95vw;
+        margin: 10px auto;
+    }
+    
+    .game-header h1 {
+        font-size: 2rem;
+        margin-bottom: 12px;
+    }
+    
+    .score-panel {
+        padding: 12px;
+        margin-bottom: 16px;
+    }
+    
+    .score-panel span:first-child {
+        font-size: 0.75rem;
+    }
+    
+    .score-panel span:last-child {
+        font-size: 1.25rem;
+    }
+    
+    #tetris-canvas {
+        width: 250px;
+        height: 500px;
+    }
+    
+    .character-area {
+        width: 254px;
+        height: 70px;
+    }
+    
+    .main-game-area {
+        gap: 12px;
+    }
+}

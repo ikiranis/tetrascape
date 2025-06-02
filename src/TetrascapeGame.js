@@ -206,8 +206,12 @@ class TetrascapeGame {
         this.gameRunning = false;
         this.stopTimerInterval(); // Stop timer when stage fails
         this.soundManager.playGameOver();
-        document.getElementById('final-score').textContent = this.score;
-        document.getElementById('game-over').style.display = 'flex';
+        
+        // Show game over modal after a short delay
+        setTimeout(async () => {
+            await this.storeManager.showGameOver();
+        }, 1000);
+        
         document.getElementById('start-button').disabled = false;
         document.getElementById('pause-button').disabled = true;
         document.getElementById('restart-button').disabled = true;
@@ -546,7 +550,10 @@ class TetrascapeGame {
         document.getElementById('start-button').disabled = true;
         document.getElementById('pause-button').disabled = false;
         document.getElementById('restart-button').disabled = false;
-        document.getElementById('game-over').style.display = 'none';
+        
+        // Remove any existing modals
+        const existingModals = document.querySelectorAll('.modal-overlay');
+        existingModals.forEach(modal => modal.remove());
         
         this.updateDisplay();
         this.updatePieceStatsDisplay();

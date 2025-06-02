@@ -1,0 +1,310 @@
+/* Modal and Store Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    opacity: 0;
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modal-overlay.show {
+    opacity: 1;
+}
+
+.store-content {
+    background: var(--surface);
+    border-radius: 16px;
+    padding: 20px;
+    margin: 20px;
+    max-width: min(400px, 90vw);
+    max-height: calc(100vh - 80px);
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--elevation-5);
+    border: 1px solid var(--outline);
+    transform: scale(0.9);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modal-overlay.show .store-content {
+    transform: scale(1);
+}
+
+.store-content h2 {
+    margin-bottom: 12px;
+    color: var(--primary);
+    font-size: 1.5rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+.completion-stats {
+    background: var(--surface-variant);
+    padding: 12px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    border: 1px solid var(--outline);
+    box-shadow: var(--elevation-1);
+}
+
+.completion-stats p {
+    margin: 4px 0;
+    font-size: 0.875rem;
+    color: var(--on-surface-variant);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.completion-stats span {
+    color: var(--on-surface);
+    font-weight: 500;
+}
+
+.store-content h3 {
+    margin-bottom: 10px;
+    color: var(--primary);
+    font-size: 1.125rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+.store-items {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin: 10px 0;
+    overflow-y: auto;
+    max-height: 300px;
+    padding-right: 4px;
+}
+
+.store-items::-webkit-scrollbar {
+    width: 6px;
+}
+
+.store-items::-webkit-scrollbar-track {
+    background: var(--surface-variant);
+    border-radius: 3px;
+}
+
+.store-items::-webkit-scrollbar-thumb {
+    background: var(--outline);
+    border-radius: 3px;
+}
+
+.store-items::-webkit-scrollbar-thumb:hover {
+    background: var(--on-surface-variant);
+}
+
+.store-item {
+    background: var(--surface);
+    padding: 6px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid var(--outline);
+    box-shadow: var(--elevation-1);
+    text-align: center;
+    min-width: 0; /* Allow items to shrink */
+}
+
+.store-item:hover:not(.disabled) {
+    box-shadow: var(--elevation-2);
+    transform: translateY(-2px);
+    border-color: var(--primary);
+}
+
+.store-item.disabled {
+    opacity: 0.38;
+    background: var(--surface-variant);
+}
+
+.item-icon {
+    font-size: 1.3rem;
+    margin-bottom: 1px;
+}
+
+.item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    text-align: center;
+}
+
+.item-name {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--on-surface);
+    line-height: 1.2;
+}
+
+.item-desc {
+    font-size: 0.7rem;
+    color: var(--on-surface-variant);
+    line-height: 1.2;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.item-price {
+    font-size: 0.8rem;
+    color: #ffb74d;
+    font-weight: 500;
+}
+
+.item-inventory {
+    font-size: 0.7rem;
+    color: var(--on-surface-variant);
+}
+
+.item-inventory span {
+    color: var(--secondary-dark);
+    font-weight: 500;
+}
+
+.store-item button {
+    padding: 4px 6px;
+    font-size: 0.65rem;
+    border-radius: 6px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border: none;
+    background: var(--primary);
+    color: var(--on-primary);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    box-shadow: var(--elevation-1);
+    min-height: 24px;
+}
+
+.store-item button:hover:not(:disabled) {
+    background: var(--primary-dark);
+    box-shadow: var(--elevation-2);
+}
+
+.store-item button:disabled {
+    background: var(--surface-variant);
+    color: var(--on-surface-variant);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.store-actions {
+    margin-top: 12px;
+    text-align: center;
+}
+
+.next-level-btn {
+    padding: 12px 24px;
+    font-size: 0.875rem;
+    border-radius: 8px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border: none;
+    background: var(--secondary);
+    color: var(--on-secondary);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    box-shadow: var(--elevation-2);
+    width: 100%;
+}
+
+.next-level-btn:hover {
+    background: var(--secondary-dark);
+    box-shadow: var(--elevation-3);
+    transform: translateY(-2px);
+}
+
+.next-level-btn:active {
+    transform: translateY(0);
+    box-shadow: var(--elevation-1);
+}
+
+/* Achievement styles */
+.achievement-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 10px 0;
+    overflow-y: auto;
+    max-height: 200px;
+    padding-right: 4px;
+}
+
+.achievement-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.achievement-list::-webkit-scrollbar-track {
+    background: var(--surface-variant);
+    border-radius: 3px;
+}
+
+.achievement-list::-webkit-scrollbar-thumb {
+    background: var(--outline);
+    border-radius: 3px;
+}
+
+.achievement-list::-webkit-scrollbar-thumb:hover {
+    background: var(--on-surface-variant);
+}
+
+.achievement-item {
+    background: var(--surface-variant);
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid var(--outline);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.achievement-item.earned {
+    background: var(--primary);
+    color: var(--on-primary);
+    box-shadow: var(--elevation-1);
+}
+
+.achievement-item:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--elevation-1);
+}
+
+.achievement-icon {
+    font-size: 1.5rem;
+    min-width: 1.5rem;
+}
+
+.achievement-info {
+    flex: 1;
+}
+
+.achievement-name {
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 2px;
+}
+
+.achievement-desc {
+    font-size: 0.75rem;
+    opacity: 0.8;
+    line-height: 1.2;
+}

@@ -1,22 +1,24 @@
-<div class="store-content">
-    <h2>🎊 Congratulations! You escaped! 🎊</h2>
-    <div class="completion-stats">
-        <p>🏆 You completed all levels!</p>
-        <p>💰 Total money: {{totalMoney}}</p>
-        <p>🧠 You are a true escape artist!</p>
-    </div>
-    
-    <div class="achievements">
-        <h3>🏅 Achievements:</h3>
-        <div class="achievement-list">
-            {{achievements}}
-            <p class="achievement">🎯 Perfect Target - You reached the end!</p>
+<div class="modal-overlay show" id="complete-modal-overlay">
+    <div class="store-content">
+        <h2>🎊 Congratulations! You escaped! 🎊</h2>
+        <div class="completion-stats">
+            <p>🏆 You completed all levels!</p>
+            <p>💰 Total money: {{totalMoney}}</p>
+            <p>🧠 You are a true escape artist!</p>
         </div>
-    </div>
-    
-    <div class="store-actions">
-        <button class="next-level-btn" onclick="location.reload()">
-            🔄 Play Again
-        </button>
+        
+        <div class="achievements">
+            <h3>🏅 Achievements:</h3>
+            <div class="achievement-list">
+                {{achievements}}
+                <p class="achievement">🎯 Perfect Target - You reached the end!</p>
+            </div>
+        </div>
+        
+        <div class="store-actions">
+            <button class="next-level-btn" onclick="location.reload()">
+                🔄 Play Again
+            </button>
+        </div>
     </div>
 </div>

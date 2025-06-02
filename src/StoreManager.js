@@ -59,11 +59,6 @@ class StoreManager {
      * @param {number} earnedMoney - Amount of money earned from completing the stage
      */
     async showStore(earnedMoney) {
-        // Create store modal
-        const storeModal = document.createElement('div');
-        storeModal.id = 'store-modal';
-        storeModal.className = 'store-modal';
-        
         // Prepare template data
         const templateData = {
             currentLevel: this.game.currentLevel,
@@ -74,12 +69,10 @@ class StoreManager {
             storeItems: await this.generateStoreItemsHTML(),
             nextButtonText: this.game.currentLevel >= 5 ? '🏆 Game End' : '➡️ Next Level'
         };
-        
-        // Render template
+
+        // Render template and add to body
         const content = await this.templateEngine.renderTemplate('storeModal', templateData);
-        storeModal.innerHTML = content;
-        
-        document.body.appendChild(storeModal);
+        document.body.insertAdjacentHTML('beforeend', content);
     }
     
     /**
@@ -135,7 +128,7 @@ class StoreManager {
      */
     updateStoreDisplay(purchasedItem) {
         // Update total money display
-        const totalMoneySpan = document.querySelector('#store-modal .total-money');
+        const totalMoneySpan = document.querySelector('#store-modal-overlay .total-money');
         if (totalMoneySpan) {
             totalMoneySpan.textContent = this.game.totalMoney;
         }
@@ -154,7 +147,7 @@ class StoreManager {
      * Update the enabled/disabled state of all store buttons
      */
     updateStoreButtonStates() {
-        const storeItems = document.querySelectorAll('#store-modal .store-item');
+        const storeItems = document.querySelectorAll('#store-modal-overlay .store-item');
         this.storeItems.forEach((itemConfig, index) => {
             const storeElement = storeItems[index];
             const button = storeElement.querySelector('button');
@@ -191,7 +184,7 @@ class StoreManager {
      * Removes store modal and either starts next level or shows game completion
      */
     nextStage() {
-        const storeModal = document.getElementById('store-modal');
+        const storeModal = document.getElementById('store-modal-overlay');
         if (storeModal) {
             storeModal.remove();
         }
@@ -210,21 +203,15 @@ class StoreManager {
      * Shows final stats, achievements, and option to play again
      */
     async showGameComplete() {
-        const completeModal = document.createElement('div');
-        completeModal.id = 'complete-modal';
-        completeModal.className = 'store-modal';
-        
         // Prepare template data
         const templateData = {
             totalMoney: this.game.totalMoney,
             achievements: await this.generateAchievementsHTML()
         };
         
-        // Render template
+        // Render template and add to body
         const content = await this.templateEngine.renderTemplate('gameCompleteModal', templateData);
-        completeModal.innerHTML = content;
-        
-        document.body.appendChild(completeModal);
+        document.body.insertAdjacentHTML('beforeend', content);
     }
     
     /**
@@ -266,6 +253,23 @@ class StoreManager {
         );
         
         return achievementHtml.join('');
+    }
+
+    /**
+     * Display the game over screen when player fails a stage
+     * Shows failure message, final stats, and option to try again
+     */
+    async showGameOver() {
+        // Prepare template data
+        const templateData = {
+            finalScore: this.game.score,
+            currentLevel: this.game.currentLevel,
+            totalMoney: this.game.totalMoney
+        };
+        
+        // Render template and add to body
+        const content = await this.templateEngine.renderTemplate('gameOverModal', templateData);
+        document.body.insertAdjacentHTML('beforeend', content);
     }
 }
 

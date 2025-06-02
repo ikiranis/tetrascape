@@ -1,0 +1,53 @@
+/* Control Buttons Styles */
+.control-buttons {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 8px;
+    z-index: 1000;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.control-btn {
+    width: 48px;
+    height: 48px;
+    border: none;
+    border-radius: 50%;
+    background: var(--surface);
+    color: var(--on-surface);
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--elevation-2);
+    border: 1px solid var(--outline);
+    position: relative;
+    z-index: 1001;
+}
+
+.control-btn:hover:not(:disabled) {
+    background: var(--surface-variant);
+    box-shadow: var(--elevation-3);
+    transform: translateY(-2px);
+}
+
+.control-btn:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: var(--elevation-1);
+}
+
+.control-btn:disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+    background: var(--surface-variant);
+    color: var(--on-surface-variant);
+}
+
+.sound-button.muted {
+    background: var(--surface-variant);
+    color: var(--on-surface-variant);
+}

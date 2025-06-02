@@ -1,20 +1,22 @@
-<div class="store-content">
-    <h2>🎉 Level {{currentLevel}} Complete! 🎉</h2>
-    <div class="completion-stats">
-        <p>💰 Earned: <span class="earned-money">+{{earnedMoney}}</span> money</p>
-        <p>💳 Total money: <span class="total-money">{{totalMoney}}</span></p>
-        <p>⏱️ Time: {{timeRemaining}}s remaining</p>
-        <p>🧱 Blocks: {{blocksRemaining}} saved</p>
-    </div>
-    
-    <h3>🛒 Buy Power-ups:</h3>
-    <div class="store-items">
-        {{storeItems}}
-    </div>
-    
-    <div class="store-actions">
-        <button class="next-level-btn" onclick="tetrisGame.storeManager.nextStage()">
-            {{nextButtonText}}
-        </button>
+<div class="modal-overlay show" id="store-modal-overlay">
+    <div class="store-content">
+        <h2>🎉 Level {{currentLevel}} Complete! 🎉</h2>
+        <div class="completion-stats">
+            <p>💰 Earned: <span class="earned-money">+{{earnedMoney}}</span> money</p>
+            <p>💳 Total money: <span class="total-money">{{totalMoney}}</span></p>
+            <p>⏱️ Time: {{timeRemaining}}s remaining</p>
+            <p>🧱 Blocks: {{blocksRemaining}} saved</p>
+        </div>
+        
+        <h3>🛒 Buy Power-ups:</h3>
+        <div class="store-items">
+            {{storeItems}}
+        </div>
+        
+        <div class="store-actions">
+            <button class="next-level-btn" onclick="tetrisGame.storeManager.nextStage()">
+                {{nextButtonText}}
+            </button>
+        </div>
     </div>
 </div>

@@ -1,0 +1,85 @@
+/* Game Layout Styles - Container, Header, Score Panel */
+.game-container {
+    background: var(--surface);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: var(--elevation-4);
+    border: 1px solid var(--outline);
+    position: relative;
+    z-index: 1;
+    width: fit-content;
+    margin: 20px auto;
+    overflow: visible;
+}
+
+.game-header {
+    text-align: center;
+    margin-bottom: 16px;
+    max-width: 800px; /* Constrain to content width */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.game-header h1 {
+    font-size: 2rem;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: var(--primary);
+    letter-spacing: -0.01562em;
+}
+
+.score-panel {
+    display: flex;
+    justify-content: space-around;
+    background: var(--surface-variant);
+    padding: 12px 16px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    box-shadow: var(--elevation-1);
+    max-width: 800px; /* Match header width */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.score-panel > div {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.score-panel span:first-child {
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: var(--on-surface-variant);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.score-panel span:last-child {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--on-surface);
+}
+
+.timer-progress-bar-container {
+    height: 4px;
+    background: var(--outline);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 8px;
+}
+
+#time-progress {
+    height: 100%;
+    background: linear-gradient(90deg, var(--secondary) 0%, var(--primary) 100%);
+    border-radius: 2px;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.game-board {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    justify-content: center;
+}

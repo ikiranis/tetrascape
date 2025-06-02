@@ -1,0 +1,51 @@
+/* Credits and Links Styles */
+.credits {
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    font-size: 12px;
+    color: var(--on-surface-variant);
+    z-index: 1000;
+    font-family: 'Roboto', sans-serif;
+    background: var(--surface);
+    padding: 8px 12px;
+    border-radius: 16px;
+    box-shadow: var(--elevation-1);
+    border: 1px solid var(--outline);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.credits:hover {
+    color: var(--on-surface);
+    box-shadow: var(--elevation-2);
+    transform: translateY(-2px);
+}
+
+.github-link {
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+    font-size: 12px;
+    z-index: 1000;
+    font-family: 'Roboto', sans-serif;
+    background: var(--surface);
+    padding: 8px 12px;
+    border-radius: 16px;
+    box-shadow: var(--elevation-1);
+    border: 1px solid var(--outline);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.github-link a {
+    color: var(--on-surface-variant);
+    text-decoration: none;
+}
+
+.github-link:hover {
+    box-shadow: var(--elevation-2);
+    transform: translateY(-2px);
+}
+
+.github-link:hover a {
+    color: var(--primary);
+}
