@@ -188,8 +188,8 @@ class TetrascapeGame {
         
         this.totalMoney += totalEarned;
         
-        setTimeout(() => {
-            this.storeManager.showStore(totalEarned);
+        setTimeout(async () => {
+            await this.storeManager.showStore(totalEarned);
         }, 3000); // Increased delay to 3 seconds
         
         // Play escape sound after a delay

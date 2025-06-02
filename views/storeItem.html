@@ -1,0 +1,10 @@
+<div class="store-item {{disabledClass}}">
+    <div class="item-icon">{{icon}}</div>
+    <div class="item-info">
+        <span class="item-name">{{name}}</span>
+        <span class="item-desc">{{description}}</span>
+        <span class="item-price">{{price}}$</span>
+        <span class="item-inventory">You have: <span id="{{key}}-count">{{inventoryCount}}</span></span>
+    </div>
+    <button onclick="tetrisGame.storeManager.buyItem('{{key}}', {{price}})" {{disabledAttribute}}>Buy</button>
+</div>

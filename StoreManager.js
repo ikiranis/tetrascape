@@ -1,3 +1,5 @@
+import TemplateEngine from './TemplateEngine.js';
+
 /**
  * StoreManager - Handles all store-related functionality for the Tetrascape game
  * Manages the store modal, purchases, progression, and game completion screens
@@ -9,6 +11,7 @@ class StoreManager {
      */
     constructor(gameInstance) {
         this.game = gameInstance;
+        this.templateEngine = new TemplateEngine();
         
         // Store configuration
         this.storePrices = {
@@ -55,53 +58,53 @@ class StoreManager {
      * Shows completion stats, available power-ups for purchase, and next level button
      * @param {number} earnedMoney - Amount of money earned from completing the stage
      */
-    showStore(earnedMoney) {
+    async showStore(earnedMoney) {
         // Create store modal
         const storeModal = document.createElement('div');
         storeModal.id = 'store-modal';
         storeModal.className = 'store-modal';
-        storeModal.innerHTML = `
-            <div class="store-content">
-                <h2>🎉 Level ${this.game.currentLevel} Complete! 🎉</h2>
-                <div class="completion-stats">
-                    <p>💰 Earned: <span class="earned-money">+${earnedMoney}</span> money</p>
-                    <p>💳 Total money: <span class="total-money">${this.game.totalMoney}</span></p>
-                    <p>⏱️ Time: ${this.game.timeLimit - Math.floor((Date.now() - this.game.levelStartTime) / 1000)}s remaining</p>
-                    <p>🧱 Blocks: ${this.game.maxBlocks - this.game.blocksUsed} saved</p>
-                </div>
-                
-                <h3>🛒 Buy Power-ups:</h3>
-                <div class="store-items">
-                    ${this.generateStoreItemsHTML()}
-                </div>
-                
-                <div class="store-actions">
-                    <button class="next-level-btn" onclick="tetrisGame.storeManager.nextStage()">
-                        ${this.game.currentLevel >= 5 ? '🏆 Game End' : '➡️ Next Level'}
-                    </button>
-                </div>
-            </div>
-        `;
+        
+        // Prepare template data
+        const templateData = {
+            currentLevel: this.game.currentLevel,
+            earnedMoney: earnedMoney,
+            totalMoney: this.game.totalMoney,
+            timeRemaining: this.game.timeLimit - Math.floor((Date.now() - this.game.levelStartTime) / 1000),
+            blocksRemaining: this.game.maxBlocks - this.game.blocksUsed,
+            storeItems: await this.generateStoreItemsHTML(),
+            nextButtonText: this.game.currentLevel >= 5 ? '🏆 Game End' : '➡️ Next Level'
+        };
+        
+        // Render template
+        const content = await this.templateEngine.renderTemplate('storeModal', templateData);
+        storeModal.innerHTML = content;
+        
         document.body.appendChild(storeModal);
     }
     
     /**
      * Generate HTML for all store items
-     * @returns {string} HTML string for store items
+     * @returns {Promise<string>} HTML string for store items
      */
-    generateStoreItemsHTML() {
-        return this.storeItems.map(item => `
-            <div class="store-item ${this.game.totalMoney >= item.price ? '' : 'disabled'}">
-                <div class="item-icon">${item.icon}</div>
-                <div class="item-info">
-                    <span class="item-name">${item.name}</span>
-                    <span class="item-desc">${item.description}</span>
-                    <span class="item-price">${item.price}$</span>
-                    <span class="item-inventory">You have: <span id="${item.key}-count">${this.game.inventory[item.key]}</span></span>
-                </div>
-                <button onclick="tetrisGame.storeManager.buyItem('${item.key}', ${item.price})" ${this.game.totalMoney >= item.price ? '' : 'disabled'}>Buy</button>
-            </div>
-        `).join('');
+    async generateStoreItemsHTML() {
+        const itemsHtml = await Promise.all(
+            this.storeItems.map(async (item) => {
+                const itemData = {
+                    icon: item.icon,
+                    name: item.name,
+                    description: item.description,
+                    price: item.price,
+                    key: item.key,
+                    inventoryCount: this.game.inventory[item.key],
+                    disabledClass: this.game.totalMoney >= item.price ? '' : 'disabled',
+                    disabledAttribute: this.game.totalMoney >= item.price ? '' : 'disabled'
+                };
+                
+                return await this.templateEngine.renderTemplate('storeItem', itemData);
+            })
+        );
+        
+        return itemsHtml.join('');
     }
     
     /**
@@ -206,57 +209,63 @@ class StoreManager {
      * Display the game completion screen when all levels are finished
      * Shows final stats, achievements, and option to play again
      */
-    showGameComplete() {
+    async showGameComplete() {
         const completeModal = document.createElement('div');
         completeModal.id = 'complete-modal';
         completeModal.className = 'store-modal';
-        completeModal.innerHTML = `
-            <div class="store-content">
-                <h2>🎊 Congratulations! You escaped! 🎊</h2>
-                <div class="completion-stats">
-                    <p>🏆 You completed all levels!</p>
-                    <p>💰 Total money: ${this.game.totalMoney}</p>
-                    <p>🧠 You are a true escape artist!</p>
-                </div>
-                
-                <div class="achievements">
-                    <h3>🏅 Achievements:</h3>
-                    <div class="achievement-list">
-                        ${this.generateAchievementsHTML()}
-                        <p class="achievement">🎯 Perfect Target - You reached the end!</p>
-                    </div>
-                </div>
-                
-                <div class="store-actions">
-                    <button class="next-level-btn" onclick="location.reload()">
-                        🔄 Play Again
-                    </button>
-                </div>
-            </div>
-        `;
+        
+        // Prepare template data
+        const templateData = {
+            totalMoney: this.game.totalMoney,
+            achievements: await this.generateAchievementsHTML()
+        };
+        
+        // Render template
+        const content = await this.templateEngine.renderTemplate('gameCompleteModal', templateData);
+        completeModal.innerHTML = content;
+        
         document.body.appendChild(completeModal);
     }
     
     /**
      * Generate HTML for achievements based on player performance
-     * @returns {string} HTML string for achievements
+     * @returns {Promise<string>} HTML string for achievements
      */
-    generateAchievementsHTML() {
+    async generateAchievementsHTML() {
         const achievements = [];
         
         if (this.game.totalMoney >= 1000) {
-            achievements.push('<p class="achievement">💎 Big Spender - You have 1000+ money!</p>');
+            achievements.push({
+                icon: '💎',
+                title: 'Big Spender',
+                description: 'You have 1000+ money!'
+            });
         }
         
         if (this.game.inventory.dynamite >= 3) {
-            achievements.push('<p class="achievement">💣 Bomber - You have 3+ dynamites!</p>');
+            achievements.push({
+                icon: '💣',
+                title: 'Bomber',
+                description: 'You have 3+ dynamites!'
+            });
         }
         
         if (this.game.inventory.shovel >= 2) {
-            achievements.push('<p class="achievement">⛏️ Worker - You have 2+ shovels!</p>');
+            achievements.push({
+                icon: '⛏️',
+                title: 'Worker',
+                description: 'You have 2+ shovels!'
+            });
         }
         
-        return achievements.join('');
+        // Render achievement templates
+        const achievementHtml = await Promise.all(
+            achievements.map(achievement => 
+                this.templateEngine.renderTemplate('achievement', achievement)
+            )
+        );
+        
+        return achievementHtml.join('');
     }
 }
 
