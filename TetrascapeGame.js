@@ -1,6 +1,7 @@
 import SoundManager from './SoundManager.js';
 import PowerUpLogic from './PowerUpLogic.js';
 import ControlsManager from './ControlsManager.js';
+import StoreManager from './StoreManager.js';
 
 /**
  * TetrascapeGame - A Tetris-based escape room game
@@ -101,6 +102,8 @@ class TetrascapeGame {
         this.powerUpLogic = new PowerUpLogic(this.soundManager, this.triggerPowerupAnimation.bind(this));
         // Initialize ControlsManager
         this.controlsManager = new ControlsManager(this);
+        // Initialize StoreManager
+        this.storeManager = new StoreManager(this);
     }
     
     /**
@@ -186,7 +189,7 @@ class TetrascapeGame {
         this.totalMoney += totalEarned;
         
         setTimeout(() => {
-            this.showStore(totalEarned);
+            this.storeManager.showStore(totalEarned);
         }, 3000); // Increased delay to 3 seconds
         
         // Play escape sound after a delay
@@ -210,184 +213,9 @@ class TetrascapeGame {
         document.getElementById('restart-button').disabled = true;
     }
     
-    /**
-     * Display the store modal after completing a stage
-     * Shows completion stats, available power-ups for purchase, and next level button
-     * @param {number} earnedMoney - Amount of money earned from completing the stage
-     */
-    showStore(earnedMoney) {
-        // Create store modal
-        const storeModal = document.createElement('div');
-        storeModal.id = 'store-modal';
-        storeModal.className = 'store-modal';
-        storeModal.innerHTML = `
-            <div class="store-content">
-                <h2>🎉 Level ${this.currentLevel} Complete! 🎉</h2>
-                <div class="completion-stats">
-                    <p>💰 Earned: <span class="earned-money">+${earnedMoney}</span> money</p>
-                    <p>💳 Total money: <span class="total-money">${this.totalMoney}</span></p>
-                    <p>⏱️ Time: ${this.timeLimit - Math.floor((Date.now() - this.levelStartTime) / 1000)}s remaining</p>
-                    <p>🧱 Blocks: ${this.maxBlocks - this.blocksUsed} saved</p>
-                </div>
-                
-                <h3>🛒 Buy Power-ups:</h3>
-                <div class="store-items">
-                    <div class="store-item ${this.totalMoney >= 50 ? '' : 'disabled'}">
-                        <div class="item-icon">💣</div>
-                        <div class="item-info">
-                            <span class="item-name">Dynamite</span>
-                            <span class="item-desc">Explodes current piece</span>
-                            <span class="item-price">50$</span>
-                            <span class="item-inventory">You have: <span id="dynamite-count">${this.inventory.dynamite}</span></span>
-                        </div>
-                        <button onclick="tetrisGame.buyItem('dynamite', 50)" ${this.totalMoney >= 50 ? '' : 'disabled'}>Buy</button>
-                    </div>
-                    <div class="store-item ${this.totalMoney >= 75 ? '' : 'disabled'}">
-                        <div class="item-icon">🔨</div>
-                        <div class="item-info">
-                            <span class="item-name">Shovel</span>
-                            <span class="item-desc">Clears vertical line</span>
-                            <span class="item-price">75$</span>
-                            <span class="item-inventory">You have: <span id="shovel-count">${this.inventory.shovel}</span></span>
-                        </div>
-                        <button onclick="tetrisGame.buyItem('shovel', 75)" ${this.totalMoney >= 75 ? '' : 'disabled'}>Buy</button>
-                    </div>
-                    <div class="store-item ${this.totalMoney >= 40 ? '' : 'disabled'}">
-                        <div class="item-icon">🔄</div>
-                        <div class="item-info">
-                            <span class="item-name">Trade</span>
-                            <span class="item-desc">Changes current piece</span>
-                            <span class="item-price">40$</span>
-                            <span class="item-inventory">You have: <span id="trade-count">${this.inventory.trade}</span></span>
-                        </div>
-                        <button onclick="tetrisGame.buyItem('trade', 40)" ${this.totalMoney >= 40 ? '' : 'disabled'}>Buy</button>
-                    </div>
-                    <div class="store-item ${this.totalMoney >= 60 ? '' : 'disabled'}">
-                        <div class="item-icon">⏰</div>
-                        <div class="item-info">
-                            <span class="item-name">Extra Time</span>
-                            <span class="item-desc">Adds +10 seconds</span>
-                            <span class="item-price">60$</span>
-                            <span class="item-inventory">You have: <span id="slow-count">${this.inventory.slow}</span></span>
-                        </div>
-                        <button onclick="tetrisGame.buyItem('slow', 60)" ${this.totalMoney >= 60 ? '' : 'disabled'}>Buy</button>
-                    </div>
-                </div>
-                
-                <div class="store-actions">
-                    <button class="next-level-btn" onclick="tetrisGame.nextStage()">
-                        ${this.currentLevel >= 5 ? '🏆 Game End' : '➡️ Next Level'}
-                    </button>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(storeModal);
-    }
     
-    /**
-     * Purchase a power-up item from the store
-     * Deducts cost from total money, adds item to inventory, and updates UI
-     * @param {string} item - Type of power-up to purchase ('dynamite', 'shovel', 'trade', 'slow')
-     * @param {number} cost - Cost of the item in game currency
-     */
-    buyItem(item, cost) {
-        if (this.totalMoney >= cost) {
-            this.totalMoney -= cost;
-            this.inventory[item]++;
-            this.soundManager.playPurchase();
-            
-            // Update store display
-            const totalMoneySpan = document.querySelector('#store-modal .total-money');
-            if (totalMoneySpan) {
-                totalMoneySpan.textContent = this.totalMoney;
-            }
-            
-            // Update inventory count in store
-            const inventoryCount = document.getElementById(item + '-count');
-            if (inventoryCount) {
-                inventoryCount.textContent = this.inventory[item];
-            }
-            
-            // Update all buttons state
-            const storeItems = document.querySelectorAll('#store-modal .store-item');
-            const costs = [50, 75, 40, 60]; // dynamite, shovel, trade, slow
-            storeItems.forEach((item, index) => {
-                const button = item.querySelector('button');
-                if (this.totalMoney < costs[index]) {
-                    item.classList.add('disabled');
-                    button.disabled = true;
-                } else {
-                    item.classList.remove('disabled');
-                    button.disabled = false;
-                }
-            });
-            
-            this.updateInventoryDisplay();
-        } else {
-            // Not enough money - show feedback
-            this.soundManager.playError();
-            const button = event.target; // Make sure event is passed or handled if this is an event handler
-            button.textContent = 'Not enough money!';
-            button.style.background = '#ff4444';
-            setTimeout(() => {
-                button.textContent = 'Buy';
-                button.style.background = '';
-            }, 1000);
-        }
-    }
     
-    /**
-     * Proceed to the next stage or complete the game
-     * Removes store modal and either starts next level or shows game completion
-     */
-    nextStage() {
-        document.getElementById('store-modal').remove();
-        
-        if (this.currentLevel >= 5) {
-            // Game completed!
-            this.showGameComplete();
-        } else {
-            this.currentLevel++;
-            this.startGame();
-        }
-    }
     
-    /**
-     * Display the game completion screen when all levels are finished
-     * Shows final stats, achievements, and option to play again
-     */
-    showGameComplete() {
-        const completeModal = document.createElement('div');
-        completeModal.id = 'complete-modal';
-        completeModal.className = 'store-modal';
-        completeModal.innerHTML = `
-            <div class="store-content">
-                <h2>🎊 Congratulations! You escaped! 🎊</h2>
-                <div class="completion-stats">
-                    <p>🏆 You completed all levels!</p>
-                    <p>💰 Total money: ${this.totalMoney}</p>
-                    <p>🧠 You are a true escape artist!</p>
-                </div>
-                
-                <div class="achievements">
-                    <h3>🏅 Achievements:</h3>
-                    <div class="achievement-list">
-                        ${this.totalMoney >= 1000 ? '<p class="achievement">💎 Big Spender - You have 1000+ money!</p>' : ''}
-                        ${this.inventory.dynamite >= 3 ? '<p class="achievement">💣 Bomber - You have 3+ dynamites!</p>' : ''}
-                        ${this.inventory.shovel >= 2 ? '<p class="achievement">⛏️ Worker - You have 2+ shovels!</p>' : ''}
-                        <p class="achievement">🎯 Perfect Target - You reached the end!</p>
-                    </div>
-                </div>
-                
-                <div class="store-actions">
-                    <button class="next-level-btn" onclick="location.reload()">
-                        🔄 Play Again
-                    </button>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(completeModal);
-    }
     
     /**
      * Update the inventory display in the UI
