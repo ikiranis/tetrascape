@@ -18,7 +18,7 @@ class TemplateEngine {
         }
         
         try {
-            const response = await fetch(`./views/${templateName}.html`);
+            const response = await fetch(`../views/${templateName}.html`);
             if (!response.ok) {
                 throw new Error(`Failed to load template: ${templateName}`);
             }
