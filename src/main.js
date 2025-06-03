@@ -33,6 +33,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Step 4: Initialize game UI and canvas
         loadingManager.nextStep('Setting up game interface...');
         await game.initializeGameUI();
+        
+        // Initialize piece statistics display with zero values
+        await game.updatePieceStatsDisplay();
+        
         await new Promise(resolve => setTimeout(resolve, 300));
         
         // Step 5: Initialize game state
