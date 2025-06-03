@@ -145,6 +145,78 @@
     align-items: center;
 }
 
+/* Powerup tooltip styles */
+.powerup-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.powerup-item {
+    position: relative;
+    cursor: help;
+    transition: color 0.2s ease;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+    font-size: 0.875rem;
+    color: var(--on-surface-variant);
+}
+
+.powerup-name {
+    text-align: left;
+    justify-self: start;
+}
+
+.powerup-count {
+    text-align: center;
+    justify-self: center;
+    font-weight: 500;
+    color: var(--on-surface);
+}
+
+.powerup-shortcut {
+    text-align: right;
+    justify-self: end;
+    font-size: 0.75rem;
+    opacity: 0.8;
+}
+
+.powerup-item:hover {
+    color: var(--primary);
+}
+
+.powerup-item[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    left: 0;
+    top: 100%;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    margin-top: 4px;
+    animation: tooltip-fade-in 0.2s ease-out;
+}
+
+@keyframes tooltip-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .controls {
     background: var(--surface);
     padding: 12px;
