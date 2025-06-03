@@ -1367,10 +1367,9 @@ class TetrascapeGame {
             }
         }
         
-        // Clear and draw background
+        // Clear and draw transparent background
         this.nextCtx.clearRect(0, 0, this.nextCanvas.width, this.nextCanvas.height);
-        this.nextCtx.fillStyle = '#1a1a2e';
-        this.nextCtx.fillRect(0, 0, this.nextCanvas.width, this.nextCanvas.height);
+        // Remove background fill to keep it transparent
         
         if (this.nextPiece) {
             const piece = this.nextPiece;
