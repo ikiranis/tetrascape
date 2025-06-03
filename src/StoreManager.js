@@ -271,6 +271,31 @@ class StoreManager {
         const content = await this.templateEngine.renderTemplate('gameOverModal', templateData);
         document.body.insertAdjacentHTML('beforeend', content);
     }
+
+    /**
+     * Restart the game from level 1 without reloading the page
+     * Removes current modal and resets the game to initial state
+     */
+    restartGame() {
+        // Remove any existing modals
+        const existingModals = document.querySelectorAll('.modal-overlay');
+        existingModals.forEach(modal => modal.remove());
+        
+        // Reset game to level 1
+        this.game.currentLevel = 1;
+        this.game.totalMoney = 0;
+        
+        // Reset inventory to starting values
+        this.game.inventory = {
+            dynamite: 5,
+            shovel: 5,
+            trade: 5,
+            slow: 5
+        };
+        
+        // Start the game
+        this.game.startGame();
+    }
 }
 
 export default StoreManager;
