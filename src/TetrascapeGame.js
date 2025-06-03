@@ -304,18 +304,6 @@ class TetrascapeGame {
     updateInventoryDisplay() {
         // Use UIManager for template-based updates
         this.uiManager.updateSidePanel();
-        
-        // Legacy direct DOM update for compatibility (can be removed once fully migrated)
-        const inventoryDiv = document.getElementById('inventory');
-        if (inventoryDiv) {
-            inventoryDiv.innerHTML = `
-                <h4>Inventory:</h4>
-                <p>💣: ${this.inventory.dynamite}</p>
-                <p>🔨: ${this.inventory.shovel}</p>
-                <p>🔄: ${this.inventory.trade}</p>
-                <p>⏰: ${this.inventory.slow}</p>
-            `;
-        }
     }
     
     /**
