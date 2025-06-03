@@ -20,7 +20,8 @@
 }
 
 .store-content {
-    background: var(--surface);
+    background: rgba(var(--surface-rgb), 0.9);
+    backdrop-filter: blur(16px);
     border-radius: 16px;
     padding: 20px;
     margin: 20px;
@@ -47,7 +48,8 @@
 }
 
 .completion-stats {
-    background: var(--surface-variant);
+    background: rgba(var(--surface-variant-rgb), 0.8);
+    backdrop-filter: blur(12px);
     padding: 12px;
     border-radius: 12px;
     margin-bottom: 12px;
@@ -106,7 +108,8 @@
 }
 
 .store-item {
-    background: var(--surface);
+    background: rgba(var(--surface-rgb), 0.7);
+    backdrop-filter: blur(8px);
     padding: 6px;
     border-radius: 8px;
     display: flex;
@@ -127,7 +130,7 @@
 
 .store-item.disabled {
     opacity: 0.38;
-    background: var(--surface-variant);
+    background: rgba(var(--surface-variant-rgb), 0.5);
 }
 
 .item-icon {
@@ -267,7 +270,8 @@
 }
 
 .achievement-item {
-    background: var(--surface-variant);
+    background: rgba(var(--surface-variant-rgb), 0.7);
+    backdrop-filter: blur(8px);
     padding: 8px;
     border-radius: 8px;
     border: 1px solid var(--outline);

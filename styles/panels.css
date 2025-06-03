@@ -16,7 +16,8 @@
 }
 
 .piece-stats {
-    background: var(--surface);
+    background: rgba(var(--surface-rgb), 0.8);
+    backdrop-filter: blur(12px);
     padding: 12px;
     border-radius: 12px;
     border: 1px solid var(--outline);
@@ -43,7 +44,7 @@
     align-items: center;
     gap: 8px;
     padding: 4px 8px;
-    background: var(--surface-variant);
+    background: rgba(var(--surface-variant-rgb), 0.6);
     border-radius: 6px;
     border: 1px solid var(--outline);
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -90,7 +91,8 @@
 }
 
 .stage-info {
-    background: var(--surface);
+    background: rgba(var(--surface-rgb), 0.8);
+    backdrop-filter: blur(12px);
     padding: 12px;
     border-radius: 12px;
     border: 1px solid var(--outline);
@@ -118,7 +120,8 @@
 }
 
 .inventory {
-    background: var(--surface);
+    background: rgba(var(--surface-rgb), 0.8);
+    backdrop-filter: blur(12px);
     padding: 12px;
     border-radius: 12px;
     border: 1px solid var(--outline);
@@ -234,7 +237,8 @@
 }
 
 .controls {
-    background: var(--surface);
+    background: rgba(var(--surface-rgb), 0.8);
+    backdrop-filter: blur(12px);
     padding: 12px;
     border-radius: 12px;
     border: 1px solid var(--outline);
@@ -261,7 +265,8 @@
 
 /* Score Info in Side Panel */
 .score-info {
-    background: var(--surface);
+    background: rgba(var(--surface-rgb), 0.8);
+    backdrop-filter: blur(12px);
     padding: 12px;
     border-radius: 12px;
     border: 1px solid var(--outline);
@@ -290,7 +295,7 @@
     align-items: center;
     text-align: center;
     padding: 6px;
-    background: var(--surface-variant);
+    background: rgba(var(--surface-variant-rgb), 0.6);
     border-radius: 6px;
     border: 1px solid var(--outline);
 }

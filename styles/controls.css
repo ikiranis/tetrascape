@@ -15,7 +15,8 @@
     height: 48px;
     border: none;
     border-radius: 50%;
-    background: var(--surface);
+    background: rgba(var(--surface-rgb), 0.9);
+    backdrop-filter: blur(16px);
     color: var(--on-surface);
     font-size: 20px;
     cursor: pointer;
@@ -30,7 +31,7 @@
 }
 
 .control-btn:hover:not(:disabled) {
-    background: var(--surface-variant);
+    background: rgba(var(--surface-variant-rgb), 0.9);
     box-shadow: var(--elevation-3);
     transform: translateY(-2px);
 }
@@ -43,11 +44,11 @@
 .control-btn:disabled {
     opacity: 0.38;
     cursor: not-allowed;
-    background: var(--surface-variant);
+    background: rgba(var(--surface-variant-rgb), 0.6);
     color: var(--on-surface-variant);
 }
 
 .sound-button.muted {
-    background: var(--surface-variant);
+    background: rgba(var(--surface-variant-rgb), 0.8);
     color: var(--on-surface-variant);
 }

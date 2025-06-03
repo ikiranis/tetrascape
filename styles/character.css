@@ -2,7 +2,8 @@
 .character-area {
     width: 100%;
     height: 80px;
-    background: var(--surface-variant);
+    background: rgba(var(--surface-variant-rgb), 0.8);
+    backdrop-filter: blur(12px);
     border: 2px solid var(--outline);
     border-radius: 8px;
     position: relative;
