@@ -311,30 +311,28 @@ class TetrascapeGame {
      * Shows usage count and percentage for each Tetris piece type
      * Renders mini piece previews on individual canvases
      */
-    updatePieceStatsDisplay() {
+    async updatePieceStatsDisplay() {
         const statsGrid = document.getElementById('stats-grid');
         if (!statsGrid) return;
         
-        let html = '';
-        Object.keys(this.pieceStats).forEach(piece => {
-            const count = this.pieceStats[piece];
-            const percentage = this.totalPieces > 0 ? ((count / this.totalPieces) * 100).toFixed(1) : '0.0';
-            
-            // Create unique canvas ID for each piece
-            const canvasId = `piece-canvas-${piece}`;
-            
-            html += `
-                <div class="stat-item">
-                    <canvas id="${canvasId}" class="piece-canvas" width="60" height="60"></canvas>
-                    <div class="stat-numbers">
-                        <div class="stat-count">${count}</div>
-                        <div class="stat-percent">${percentage}%</div>
-                    </div>
-                </div>
-            `;
-        });
+        // Generate HTML for all piece statistics using templates
+        const pieceStatsHTML = await Promise.all(
+            Object.keys(this.pieceStats).map(async (piece) => {
+                const count = this.pieceStats[piece];
+                const percentage = this.totalPieces > 0 ? ((count / this.totalPieces) * 100).toFixed(1) : '0.0';
+                const canvasId = `piece-canvas-${piece}`;
+                
+                const itemData = {
+                    canvasId: canvasId,
+                    count: count,
+                    percentage: percentage
+                };
+                
+                return await this.uiManager.templateEngine.renderTemplate('pieceStatItem', itemData);
+            })
+        );
         
-        statsGrid.innerHTML = html;
+        statsGrid.innerHTML = pieceStatsHTML.join('');
         
         // Draw each piece on its canvas after DOM update
         requestAnimationFrame(() => {
@@ -557,7 +555,7 @@ class TetrascapeGame {
         // Track piece statistics
         this.pieceStats[randomKey]++;
         this.totalPieces++;
-        this.updatePieceStatsDisplay();
+        this.updatePieceStatsDisplay(); // Fire and forget - don't need to await
         
         // Add 1 point for new piece spawn
         this.score += 1;
@@ -636,7 +634,7 @@ class TetrascapeGame {
         existingModals.forEach(modal => modal.remove());
         
         this.updateDisplay();
-        this.updatePieceStatsDisplay();
+        this.updatePieceStatsDisplay(); // Async call - don't need to await in this context
         this.gameLoop();
     }
     

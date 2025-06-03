@@ -43,7 +43,7 @@ class TemplateEngine {
         // Simple template variable substitution using {{variable}} syntax
         Object.keys(data).forEach(key => {
             const regex = new RegExp(`{{\\s*${key}\\s*}}`, 'g');
-            rendered = rendered.replace(regex, data[key] || '');
+            rendered = rendered.replace(regex, data[key] !== undefined && data[key] !== null ? data[key] : '');
         });
         
         return rendered;
