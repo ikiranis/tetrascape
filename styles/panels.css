@@ -34,15 +34,17 @@
 
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
-    gap: 8px;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
 }
 
 .stat-item {
-    text-align: center;
-    padding: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px;
     background: var(--surface-variant);
-    border-radius: 8px;
+    border-radius: 6px;
     border: 1px solid var(--outline);
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -59,10 +61,32 @@
     display: block;
 }
 
+.piece-canvas {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+}
+
+.stat-numbers {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    text-align: left;
+    line-height: 1.1;
+}
+
 .stat-count {
-    font-size: 0.875rem;
-    color: var(--on-surface-variant);
+    font-size: 0.75rem;
+    color: var(--on-surface);
     font-weight: 500;
+    line-height: 1.1;
+}
+
+.stat-percent {
+    font-size: 0.7rem;
+    color: var(--on-surface-variant);
+    font-weight: 400;
+    line-height: 1.1;
 }
 
 .stage-info {
