@@ -1,4 +1,21 @@
 /* Game Layout Styles - Container, Header, Score Panel */
+.main-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 40px;
+    width: fit-content;
+    margin: 20px auto;
+}
+
+.game-header {
+    writing-mode: vertical-lr;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+    margin: 40px -20px 0 20px;
+    padding-top: 20px;
+    flex-shrink: 0;
+}
+
 .game-container {
     background: var(--surface);
     border-radius: 16px;
@@ -8,16 +25,11 @@
     position: relative;
     z-index: 1;
     width: fit-content;
-    margin: 20px auto;
     overflow: visible;
 }
 
-.game-header {
-    text-align: center;
-    margin-bottom: 16px;
-    max-width: 800px; /* Constrain to content width */
-    margin-left: auto;
-    margin-right: auto;
+.game-content-wrapper {
+    flex: 1;
 }
 
 .game-header h1 {
