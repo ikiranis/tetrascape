@@ -1276,7 +1276,7 @@ class TetrascapeGame {
      */
     updateTimerDisplay() {
         // Use UIManager for coordinated timer updates
-        this.uiManager.updateScorePanel();
+        this.uiManager.updateSidePanel();
         
         // Legacy timer update for compatibility (can be removed once fully migrated)
         if (!this.gameRunning || this.stageCompleted) {

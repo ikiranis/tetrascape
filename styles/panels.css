@@ -145,6 +145,27 @@
     align-items: center;
 }
 
+/* Character Progress in Left Panel */
+.character-progress {
+    /* Remove all styling - just a container */
+}
+
+.character-progress h4 {
+    margin-bottom: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.character-progress .character-area {
+    width: 100%;
+    height: 60px;
+    border-radius: 8px;
+    margin-top: 4px;
+}
+
 /* Powerup tooltip styles */
 .powerup-grid {
     display: flex;
@@ -241,4 +262,63 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+/* Score Info in Side Panel */
+.score-info {
+    background: var(--surface);
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid var(--outline);
+    box-shadow: var(--elevation-1);
+    margin-bottom: 16px;
+}
+
+.score-info h3 {
+    margin-bottom: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.score-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.score-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 6px;
+    background: var(--surface-variant);
+    border-radius: 6px;
+    border: 1px solid var(--outline);
+}
+
+.score-label {
+    font-size: 0.75rem;
+    color: var(--on-surface-variant);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 2px;
+}
+
+.score-value {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--on-surface);
+}
+
+.timer-progress-bar-container {
+    height: 6px;
+    background: var(--outline);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 8px;
 }

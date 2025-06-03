@@ -1,4 +1,25 @@
 <div class="side-panel">
+    <div class="score-info">
+        <h3>Game Status</h3>
+        <div class="score-grid">
+            <div class="score-item">
+                <span class="score-label">Score:</span>
+                <span class="score-value" id="score">{{score}}</span>
+            </div>
+            <div class="score-item">
+                <span class="score-label">Level:</span>
+                <span class="score-value" id="level">{{level}}</span>
+            </div>
+            <div class="score-item">
+                <span class="score-label">Time:</span>
+                <span class="score-value" id="time-remaining">{{timeRemaining}}</span>
+            </div>
+            <div class="score-item">
+                <span class="score-label">Lines:</span>
+                <span class="score-value" id="lines">{{lines}}</span>
+            </div>
+        </div>
+    </div>
     <div class="stage-info" id="stage-info">
         <h3>Level Objectives</h3>
         <p>Target Score: <span id="goal-score">{{goalScore}}</span></p>

@@ -22,20 +22,17 @@ class UIManager {
             // Load and render control buttons
             const controlButtonsHTML = await this.templateEngine.renderTemplate('controlButtons', {});
             
-            // Load and render score panel
-            const scorePanelHTML = await this.templateEngine.renderTemplate('scorePanel', {
+            // Load and render game board components
+            const characterAreaHTML = await this.templateEngine.renderTemplate('characterArea', {});
+            const leftPanelHTML = await this.templateEngine.renderTemplate('leftPanel', {
+                characterArea: characterAreaHTML
+            });
+            const mainGameAreaHTML = await this.templateEngine.renderTemplate('mainGameArea', {});
+            const sidePanelHTML = await this.templateEngine.renderTemplate('sidePanel', {
                 score: this.game.score || 0,
                 level: this.game.currentLevel || 1,
                 timeRemaining: '00:00',
-                timeProgress: 100,
-                timeColor: 'green',
-                lines: this.game.lines || 0
-            });
-            
-            // Load and render game board components
-            const leftPanelHTML = await this.templateEngine.renderTemplate('leftPanel', {});
-            const mainGameAreaHTML = await this.templateEngine.renderTemplate('mainGameArea', {});
-            const sidePanelHTML = await this.templateEngine.renderTemplate('sidePanel', {
+                lines: this.game.lines || 0,
                 goalScore: this.game.levelGoals?.minScore || 500,
                 blocksUsed: this.game.blocksUsed || 0,
                 goalBlocks: this.game.maxBlocks || 50,
@@ -59,11 +56,6 @@ class UIManager {
                 controlButtonsContainer.innerHTML = controlButtonsHTML;
             }
             
-            const scorePanelContainer = document.querySelector('#score-panel-container');
-            if (scorePanelContainer) {
-                scorePanelContainer.innerHTML = scorePanelHTML;
-            }
-            
             const gameBoardContainer = document.querySelector('#game-board-container');
             if (gameBoardContainer) {
                 gameBoardContainer.innerHTML = gameBoardHTML;
@@ -79,12 +71,12 @@ class UIManager {
     }
     
     /**
-     * Update the score panel with current game data
+     * Update the side panel with current game data
      */
-    async updateScorePanel() {
+    async updateSidePanel() {
         if (!this.isInitialized) return;
-        
-        // Calculate time progress
+
+        // Calculate time progress for score section
         const timeElapsed = this.game.getElapsedTime ? this.game.getElapsedTime() : 0;
         const timeRemaining = Math.max(0, this.game.timeLimit - timeElapsed);
         const timeProgress = this.game.timeLimit > 0 ? (timeRemaining / this.game.timeLimit) * 100 : 100;
@@ -98,32 +90,19 @@ class UIManager {
         const minutes = Math.floor(timeRemaining / 60);
         const seconds = timeRemaining % 60;
         const timeDisplay = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        
-        // Update individual elements instead of replacing the entire panel
+
+        // Update score elements in side panel
         const scoreElement = document.getElementById('score');
         const levelElement = document.getElementById('level');
         const timeRemainingElement = document.getElementById('time-remaining');
-        const timeProgressElement = document.getElementById('time-progress');
         const linesElement = document.getElementById('lines');
-        
+
         if (scoreElement) scoreElement.textContent = this.game.score || 0;
         if (levelElement) levelElement.textContent = this.game.currentLevel || 1;
         if (timeRemainingElement) timeRemainingElement.textContent = timeDisplay;
         if (linesElement) linesElement.textContent = this.game.lines || 0;
-        
-        if (timeProgressElement) {
-            timeProgressElement.style.width = `${Math.max(0, timeProgress)}%`;
-            timeProgressElement.style.backgroundColor = timeColor;
-        }
-    }
-    
-    /**
-     * Update the side panel with current game data
-     */
-    async updateSidePanel() {
-        if (!this.isInitialized) return;
-        
-        // Update individual elements instead of replacing the entire panel
+
+        // Update other side panel elements
         // This preserves the canvas elements and their contexts
         const goalScoreElement = document.getElementById('goal-score');
         const blocksUsedElement = document.getElementById('blocks-used');
@@ -148,7 +127,6 @@ class UIManager {
      * Update all UI components with current game data
      */
     async updateUI() {
-        await this.updateScorePanel();
         await this.updateSidePanel();
     }
 }
