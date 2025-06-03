@@ -13,7 +13,7 @@
     border-radius: 12px;
     background: #000;
     display: block;
-    box-shadow: var(--elevation-2);
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4), 0 6px 24px rgba(0, 0, 0, 0.3);
 }
 
 /* Next Piece Overlay */

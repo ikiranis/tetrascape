@@ -17,11 +17,11 @@
 }
 
 .game-container {
-    background: var(--surface);
+    background: transparent;
     border-radius: 16px;
     padding: 24px;
-    box-shadow: var(--elevation-4);
-    border: 1px solid var(--outline);
+    box-shadow: none;
+    border: none;
     position: relative;
     z-index: 1;
     width: fit-content;
@@ -47,7 +47,7 @@
     padding: 12px 16px;
     border-radius: 12px;
     margin-bottom: 16px;
-    box-shadow: var(--elevation-1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.2);
     max-width: 800px; /* Match header width */
     margin-left: auto;
     margin-right: auto;

@@ -20,7 +20,7 @@
     padding: 12px;
     border-radius: 12px;
     border: 1px solid var(--outline);
-    box-shadow: var(--elevation-1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
 .piece-stats h4 {
@@ -94,7 +94,7 @@
     padding: 12px;
     border-radius: 12px;
     border: 1px solid var(--outline);
-    box-shadow: var(--elevation-1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
 .stage-info h3 {
@@ -122,7 +122,7 @@
     padding: 12px;
     border-radius: 12px;
     border: 1px solid var(--outline);
-    box-shadow: var(--elevation-1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
 .inventory h4 {
@@ -144,9 +144,6 @@
 }
 
 /* Character Progress in Left Panel */
-.character-progress {
-    /* Remove all styling - just a container */
-}
 
 .character-progress h4 {
     margin-bottom: 8px;
@@ -241,7 +238,7 @@
     padding: 12px;
     border-radius: 12px;
     border: 1px solid var(--outline);
-    box-shadow: var(--elevation-1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
 .controls h3 {
@@ -268,7 +265,7 @@
     padding: 12px;
     border-radius: 12px;
     border: 1px solid var(--outline);
-    box-shadow: var(--elevation-1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
 .score-info h3 {
